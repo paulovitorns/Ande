@@ -1,5 +1,8 @@
 package br.com.ande.ui.view;
 
+import java.io.File;
+import java.io.IOException;
+
 import br.com.ande.model.User;
 
 /**
@@ -29,5 +32,11 @@ public interface ProfileView extends BaseView {
     void setEmailDefaultState();
 
     void showSuccessDialog();
+
+    void dispatchTakePictureIntent();
+
+    File createImageFile() throws IOException;
+
+    void setPic();
 
 }

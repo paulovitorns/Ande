@@ -14,6 +14,8 @@ public interface ProfilePresenter extends BasePresenter {
 
     void sendToUpdate(User user);
 
+    void updateImagemUser(User user);
+
     boolean validateRegisterData();
 
     boolean isValidEmail();

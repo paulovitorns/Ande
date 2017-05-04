@@ -77,6 +77,11 @@ public class ProfilePresenterImpl implements ProfilePresenter, RegisterResultLis
     }
 
     @Override
+    public void updateImagemUser(User user) {
+        this.sessionManagerService.updateCurrentSession(user);
+    }
+
+    @Override
     public boolean validateRegisterData() {
 
         if(this.user.getName().isEmpty()){
