@@ -6,11 +6,62 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark">
 
-    <TextView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="dashboard"
-        android:textColor="@color/white"
-        android:textSize="20sp"/>
+        android:paddingTop="@dimen/margin_default"
+        android:paddingRight="@dimen/margin_default"
+        android:paddingLeft="@dimen/margin_default">
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/containerUserInfo"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+                
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/imgProfile"
+                    android:layout_width="@dimen/img_dash_size"
+                    android:layout_height="@dimen/img_dash_size"
+                    android:src="@drawable/ic_account_circle"
+                    android:layout_marginRight="@dimen/margin_small"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txUserName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="User Name"
+                        android:textSize="@dimen/font_big"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/txWalkRegister"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_micro"
+                        android:text="... caminhada(s) registrada(s)"
+                        android:textSize="@dimen/font_default"
+                        android:textColor="@color/white"/>
+
+                </LinearLayout>
+                
+            </LinearLayout>
+            
+        </LinearLayout>
+        
+    </android.support.v4.widget.NestedScrollView>
+    
 
 </LinearLayout>

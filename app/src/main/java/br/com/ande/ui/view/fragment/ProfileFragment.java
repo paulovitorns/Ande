@@ -12,10 +12,10 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.EditText;
 
 import java.io.File;
@@ -58,8 +58,6 @@ public class ProfileFragment extends Fragment implements ProfileView {
     private ProfilePresenter    presenter;
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
-    private boolean loadedW;
-    private boolean loadedH;
     private int targetW;
     private int targetH;
 
@@ -79,6 +77,9 @@ public class ProfileFragment extends Fragment implements ProfileView {
 
         ButterKnife.bind(this, view);
 
+        targetH = dp2px((int) (getResources().getDimension(R.dimen.img_profile_size) / getResources().getDisplayMetrics().density));
+        targetW = dp2px((int) (getResources().getDimension(R.dimen.img_profile_size) / getResources().getDisplayMetrics().density));
+
         edtName.addTextChangedListener(new SimpleValidateWatcher(edtName, edtLayoutName, R.string.error_empty_name, getContext()));
         edtBirth.addTextChangedListener(new DateValidateWatcher(edtBirth, edtLayoutBirth, R.string.error_empty_birth, getContext()));
 
@@ -91,63 +92,6 @@ public class ProfileFragment extends Fragment implements ProfileView {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        ViewTreeObserver vtDD = view.getViewTreeObserver();
-
-        vtDD.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                if(!loadedH){
-                    setImgHeight(imageView.getMeasuredHeight());
-                }
-                if(!loadedW){
-                    setImgWidth(imageView.getMeasuredWidth());
-                }
-                return true;
-            }
-        });
-    }
-
-    public void setImgHeight(int height){
-
-        if(height > 0)
-            targetH = height;
-
-        if(height > targetH)
-            targetH = height;
-
-        if(height > 0 && height == targetH) {
-            loadedH = true;
-            checkIfImageViewIsFullLoaded();
-        }
-
-    }
-
-    public void setImgWidth(int width){
-
-        if(width > 0)
-            targetW = width;
-
-        if(width > targetW)
-            targetW = width;
-
-        if(width > 0 && width == targetW) {
-            loadedW = true;
-            checkIfImageViewIsFullLoaded();
-        }
-
-    }
-
-    public void checkIfImageViewIsFullLoaded(){
-        if(loadedW && loadedH){
-            if(user.getImgNameResource() != null || user.getImgNameResource().isEmpty())
-                setPic();
-        }
     }
 
     @Override
@@ -164,8 +108,8 @@ public class ProfileFragment extends Fragment implements ProfileView {
         if(user.getEmail() != null || !user.getEmail().isEmpty())
             edtEmail.setText(user.getEmail());
 
-        if((loadedW && loadedH) && (targetH > 0 && targetW > 0)){
-            if(user.getImgNameResource() != null || user.getImgNameResource().isEmpty())
+        if(user.getImgNameResource() != null){
+            if(!user.getImgNameResource().isEmpty())
                 setPic();
         }
 
@@ -336,4 +280,9 @@ public class ProfileFragment extends Fragment implements ProfileView {
             setPic();
         }
     }
+
+    private int dp2px(int dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
+    }
+
 }
