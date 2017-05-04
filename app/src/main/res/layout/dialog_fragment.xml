@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minWidth="300dp"
+    android:background="@color/white"
+    android:id="@+id/container">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/margin_default"
+        android:paddingRight="@dimen/margin_default"
+        android:paddingLeft="@dimen/margin_default">
+
+        <TextView
+            android:id="@+id/txtTitleDialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Título"
+            android:textSize="@dimen/font_title"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"/>
+
+        <TextView
+            android:id="@+id/txtTextDialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:text="Descrição"
+            android:textSize="@dimen/font_big"
+            android:textStyle="normal"
+            android:textColor="@color/grey"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_big"
+        android:paddingRight="@dimen/margin_default"
+        android:paddingLeft="@dimen/margin_default"
+        android:paddingBottom="@dimen/margin_default"
+        android:gravity="right"
+        android:weightSum="2">
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/btn_height"
+            android:background="@android:color/transparent"
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
+            android:id="@+id/btnOk"
+            android:text="Ok"
+            android:textSize="@dimen/font_default"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            android:gravity="right|bottom"/>
+
+    </LinearLayout>
+
+</LinearLayout>

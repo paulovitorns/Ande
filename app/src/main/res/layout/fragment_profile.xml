@@ -1,16 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark">
 
-    <TextView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="perfil"
-        android:textColor="@color/white"
-        android:textSize="20sp"/>
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/margin_default"
+        android:paddingRight="@dimen/margin_default"
+        android:paddingTop="@dimen/margin_big">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="4">
+
+            <RelativeLayout
+                android:layout_width="@dimen/container_img_profile_size"
+                android:layout_height="@dimen/container_img_profile_size"
+                android:layout_gravity="center_horizontal">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/imgProfile"
+                    android:layout_width="@dimen/img_profile_size"
+                    android:layout_height="@dimen/img_profile_size"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/ic_account_circle"/>
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fabCamera"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/margin_default"
+                    android:layout_marginBottom="@dimen/margin_default"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    app:fabSize="normal"
+                    app:backgroundTint="@color/colorPrimary"
+                    android:src="@drawable/ic_photo_camera_white_36dp"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_big"
+                android:layout_marginBottom="@dimen/margin_default"
+                android:weightSum="2">
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginRight="@dimen/margin_small">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/edtLayoutName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:textColorHint="@color/white">
+
+                        <EditText
+                            android:id="@+id/edtName"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/edt_common_size"
+                            android:background="@drawable/view_edittext_background"
+                            android:inputType="textCapWords"
+                            android:hint="@string/hint_name"
+                            android:textSize="@dimen/font_default"
+                            android:textStyle="bold"
+                            android:textColor="@color/white"
+                            android:textColorHint="@color/white"/>
+
+                    </android.support.design.widget.TextInputLayout>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="@dimen/margin_small">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/edtLayoutBirth"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:textColorHint="@color/white">
+
+                        <EditText
+                            android:id="@+id/edtBirth"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/edt_common_size"
+                            android:background="@drawable/view_edittext_background"
+                            android:inputType="number"
+                            android:hint="@string/hint_birthdate"
+                            android:textSize="@dimen/font_default"
+                            android:textStyle="bold"
+                            android:textColor="@color/white"
+                            android:textColorHint="@color/white"/>
+
+                    </android.support.design.widget.TextInputLayout>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/edtLayoutEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:textColorHint="@color/white">
+
+                    <EditText
+                        android:id="@+id/edtEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/edt_common_size"
+                        android:background="@drawable/view_edittext_background"
+                        android:inputType="textEmailAddress"
+                        android:hint="@string/hint_email"
+                        android:textSize="@dimen/font_default"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/white"/>
+
+                </android.support.design.widget.TextInputLayout>
+
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/btn_height"
+                android:layout_marginTop="@dimen/margin_big"
+                android:background="@color/colorPrimary"
+                android:text="@string/btn_save"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_default"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
 
 </LinearLayout>

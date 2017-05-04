@@ -9,4 +9,18 @@
     <!--Toast texts alerts-->
     <string name="toast_exit_alert">Pressione novamente para sair</string>
 
+    <!--Hints Profile-->
+    <string name="hint_name">Nome</string>
+    <string name="hint_birthdate">Data de nascimento</string>
+    <string name="hint_email">Email</string>
+
+    <!--Common Text-->
+    <string name="btn_save">salvar</string>
+
+    <!--validate msg errors-->
+    <string name="error_empty_name">digite seu nome</string>
+    <string name="error_empty_birth">digite sua data de nascimento</string>
+    <string name="error_empty_email">digite seu email</string>
+    <string name="error_format_email">digite uma email válido</string>
+
 </resources>
