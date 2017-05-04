@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Strings of Session-->
+    <string name="shared_session">shared_session</string>
+    <string name="shared_session_data">shared_session_data</string>
+</resources>

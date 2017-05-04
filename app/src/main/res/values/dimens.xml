@@ -2,4 +2,27 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!--Commom UI elemts-->
+    <dimen name="btn_height">48dp</dimen>
+    <dimen name="img_profile_size">160dp</dimen>
+    <dimen name="edt_common_size">48dp</dimen>
+
+    <!--Margins default-->
+    <dimen name="margin_micro">4dp</dimen>
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_default">16dp</dimen>
+    <dimen name="margin_extra">24dp</dimen>
+    <dimen name="margin_big">32dp</dimen>
+    <dimen name="margin_extra_big">48dp</dimen>
+    <dimen name="margin_large">64dp</dimen>
+
+
+    <!--Font size-->
+    <dimen name="font_small">12sp</dimen>
+    <dimen name="font_default">14sp</dimen>
+    <dimen name="font_big">16sp</dimen>
+    <dimen name="font_title">20sp</dimen>
+    <dimen name="font_large">24sp</dimen>
+
 </resources>
