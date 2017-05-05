@@ -23,4 +23,17 @@
     <string name="error_empty_email">digite seu email</string>
     <string name="error_format_email">digite uma email válido</string>
 
+    <!--walk dashboard-->
+    <string name="user_name">Olá, visitante!</string>
+    <string name="steps_count">... caminhada(s) registrada(s)</string>
+    <string name="intro_last_walke">Último registro</string>
+    <string name="last_walk">você deu</string>
+    <string name="last_walk_compl">em sua última caminhada</string>
+    <string name="last_steps_mark">0</string>
+    <string name="initial_steps_mark">0</string>
+    <string name="intro_actual_walk">Sua caminhada atual</string>
+    <string name="walk_actual_steps">passos</string>
+    <string name="duration_of_walk">Sua caminhada durou</string>
+    <string name="initial_duration_mark">...h e ...m</string>
+
 </resources>

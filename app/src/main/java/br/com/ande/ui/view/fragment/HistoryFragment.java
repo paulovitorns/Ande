@@ -3,11 +3,16 @@ package br.com.ande.ui.view.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import br.com.ande.Ande;
 import br.com.ande.R;
+import br.com.ande.ui.adapter.HistoryAdapter;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
@@ -17,6 +22,8 @@ import butterknife.ButterKnife;
  */
 
 public class HistoryFragment extends Fragment {
+
+    @Bind(R.id.rvHistory)   RecyclerView recycler;
 
     public HistoryFragment(){
 
@@ -34,6 +41,14 @@ public class HistoryFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
+        HistoryAdapter adapter = new HistoryAdapter(Ande.getControllerBD().getHistories(), getContext());
+
+        recycler.setHasFixedSize(true);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recycler.setLayoutManager(mLayoutManager);
+
+        recycler.setAdapter(adapter);
         return view;
     }
 
