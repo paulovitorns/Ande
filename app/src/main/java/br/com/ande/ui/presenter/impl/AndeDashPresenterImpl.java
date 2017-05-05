@@ -31,6 +31,8 @@ public class AndeDashPresenterImpl implements AndeDashPresenter {
         if(session != null && session.getUser() != null){
             this.view.showInfoUser(session.getUser());
         }
+
+        this.view.startWalkListeners();
     }
 
     @Override

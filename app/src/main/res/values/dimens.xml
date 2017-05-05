@@ -18,6 +18,7 @@
     <dimen name="margin_big">32dp</dimen>
     <dimen name="margin_extra_big">48dp</dimen>
     <dimen name="margin_large">64dp</dimen>
+    <dimen name="margin_large_plus_bottom_nav">120dp</dimen>
 
 
     <!--Font size-->
@@ -26,5 +27,6 @@
     <dimen name="font_big">16sp</dimen>
     <dimen name="font_title">20sp</dimen>
     <dimen name="font_large">24sp</dimen>
+    <dimen name="font_extra_large">26sp</dimen>
 
 </resources>
