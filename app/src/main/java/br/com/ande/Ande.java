@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
+import br.com.ande.sqlLite.controller.ControllerBD;
+
 /**
  * © Copyright 2017 Ande.
  * Autor : Paulo Sales - dev@paulovns.com.br
@@ -13,7 +15,7 @@ import android.support.multidex.MultiDexApplication;
 public class Ande extends MultiDexApplication {
 
     private static Context context;
-
+    private static ControllerBD controllerBD;
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
@@ -24,7 +26,8 @@ public class Ande extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
 
-        context = getApplicationContext();
+        context         = getApplicationContext();
+        controllerBD    = new ControllerBD(context);
     }
 
     public static Context getContext() {
@@ -34,4 +37,9 @@ public class Ande extends MultiDexApplication {
     public static void setContext(Context context) {
         Ande.context = context;
     }
+
+    public static ControllerBD getControllerBD() {
+        return controllerBD;
+    }
+
 }

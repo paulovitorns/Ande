@@ -33,5 +33,7 @@
     <string name="initial_steps_mark">0</string>
     <string name="intro_actual_walk">Sua caminhada atual</string>
     <string name="walk_actual_steps">passos</string>
+    <string name="duration_of_walk">Sua caminhada durou</string>
+    <string name="initial_duration_mark">...h e ...m</string>
 
 </resources>

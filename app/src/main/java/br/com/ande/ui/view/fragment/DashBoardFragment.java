@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ import java.util.TimerTask;
 
 import br.com.ande.R;
 import br.com.ande.model.User;
+import br.com.ande.sqlLite.entity.Histoty;
 import br.com.ande.ui.presenter.AndeDashPresenter;
 import br.com.ande.ui.presenter.impl.AndeDashPresenterImpl;
 import br.com.ande.ui.view.AndeDashView;
@@ -48,6 +50,7 @@ public class DashBoardFragment extends Fragment implements AndeDashView, SensorE
 
     @Bind(R.id.imgProfile)      CircleImageView imageView;
     @Bind(R.id.imgIconAction)   ImageView       imgIconAction;
+    @Bind(R.id.containerLast)   LinearLayout    containerLast;
 
     private int     targetW;
     private int     targetH;
@@ -64,6 +67,10 @@ public class DashBoardFragment extends Fragment implements AndeDashView, SensorE
     private long    WAIT_DELAY_FOR_NEXT_STEP = 10000;
     private boolean isWaitNextStepIsStarted;
     private boolean isLoadfirtsStep = true;
+    private long    initialTimeStamp;
+    private long    currentTimeStamp;
+    private long    finalTimeStamp;
+    private int     lastId;
 
     public DashBoardFragment(){
 
@@ -107,9 +114,13 @@ public class DashBoardFragment extends Fragment implements AndeDashView, SensorE
     public void onPause() {
         super.onPause();
         sensorManager.unregisterListener(this);
-        this.timer.cancel();
-        this.timer.purge();
-        this.timer = null;
+
+        if(this.timer != null){
+            this.timer.cancel();
+            this.timer.purge();
+            this.timer = null;
+        }
+
         isLoadfirtsStep = true;
     }
 
@@ -121,10 +132,6 @@ public class DashBoardFragment extends Fragment implements AndeDashView, SensorE
             txUserName.setText("Olá, "+user.getName());
         else
             txUserName.setText(getResources().getString(R.string.user_name));
-
-        String strWalk = txWalkRegister.getText().toString();
-        strWalk = strWalk.replace("...", String.valueOf(10));
-        txWalkRegister.setText(strWalk);
 
         if(user.getImgNameResource() != null){
             if(!user.getImgNameResource().isEmpty())
@@ -194,6 +201,27 @@ public class DashBoardFragment extends Fragment implements AndeDashView, SensorE
         imageView.setImageBitmap(bitmap);
     }
 
+    @Override
+    public void loadLastHistory(Histoty histoty) {
+        if(histoty == null){
+
+            containerLast.setVisibility(View.GONE);
+            lastId = 1;
+        }else{
+
+            containerLast.setVisibility(View.VISIBLE);
+            txLastSteps.setText(String.valueOf(histoty.getSteps()));
+            lastId = histoty.getId() + 1;
+        }
+    }
+
+    @Override
+    public void updateCountHistories(int histories) {
+        String str = txWalkRegister.getText().toString();
+        str = str.replace("...", String.valueOf(histories));
+        txWalkRegister.setText(str);
+    }
+
     private int dp2px(int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
     }
@@ -201,6 +229,12 @@ public class DashBoardFragment extends Fragment implements AndeDashView, SensorE
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         if(!isLoadfirtsStep){
+
+            if(initialTimeStamp == 0)
+                initialTimeStamp = sensorEvent.timestamp;
+
+            currentTimeStamp = sensorEvent.timestamp;
+
             steps++;
             setInfoToCurrentWalk(steps, true);
 
@@ -245,6 +279,8 @@ public class DashBoardFragment extends Fragment implements AndeDashView, SensorE
                     public void run() {
 
                         isWaitNextStepIsStarted = false;
+                        finalTimeStamp = currentTimeStamp;
+                        sendNewHistory();
                         steps = 0;
                         setInfoToCurrentWalk(steps, false);
                         Log.d("COUNT_STEPS_NEW", "VAMOS REINICIAR");
@@ -267,4 +303,23 @@ public class DashBoardFragment extends Fragment implements AndeDashView, SensorE
 
         txActualSteps.setText(String.valueOf(steps));
     }
+
+
+    @Override
+    public void sendNewHistory() {
+
+        Histoty histoty = new Histoty();
+
+        histoty.setId(lastId);
+        histoty.setSteps(steps);
+        histoty.setStartTime(String.valueOf(initialTimeStamp));
+        histoty.setFinishTime(String.valueOf(finalTimeStamp));
+
+        initialTimeStamp    = 0;
+        finalTimeStamp      = 0;
+        currentTimeStamp    = 0;
+
+        presenter.insertNewHistory(histoty);
+    }
+
 }
