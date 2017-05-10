@@ -19,4 +19,8 @@ public interface DashBoardView extends BaseView {
 
     View getBottomNavigationView();
 
+    void onClickProfile();
+
+    void onClickHistory();
+
 }
