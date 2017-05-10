@@ -31,8 +31,10 @@ import br.com.ande.ui.presenter.AndeDashPresenter;
 import br.com.ande.ui.presenter.impl.AndeDashPresenterImpl;
 import br.com.ande.ui.view.AndeDashView;
 import br.com.ande.ui.view.DashBoardView;
+import br.com.ande.ui.view.activity.DashBoardActivity;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -320,6 +322,16 @@ public class DashBoardFragment extends Fragment implements AndeDashView, SensorE
         currentTimeStamp    = 0;
 
         presenter.insertNewHistory(histoty);
+    }
+
+    @OnClick(R.id.containerUserInfo)
+    public void onClickProfile(){
+        ((DashBoardActivity) getActivity()).onClickProfile();
+    }
+
+    @OnClick(R.id.containerLast)
+    public void onClickHistory(){
+        ((DashBoardActivity) getActivity()).onClickHistory();
     }
 
 }

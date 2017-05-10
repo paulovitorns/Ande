@@ -25,8 +25,8 @@ public class DashboardPresenterImpl implements DashboardPresenter {
 
     @Override
     public void init() {
-        view.loadDefaultFragment();
         view.setupBottomNavigationView();
+        view.loadDefaultFragment();
     }
 
     @Override
