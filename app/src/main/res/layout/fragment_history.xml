@@ -12,7 +12,7 @@
         android:layout_marginTop="@dimen/margin_default"
         android:layout_marginRight="@dimen/margin_default"
         android:layout_marginLeft="@dimen/margin_default"
-        android:text="Seu hístorico de caminhadas"
+        android:text="@string/history_title"
         android:textColor="@color/white"
         android:textSize="@dimen/font_title"/>
 
@@ -23,5 +23,39 @@
         android:paddingTop="@dimen/margin_extra">
 
     </android.support.v7.widget.RecyclerView>
+
+    <LinearLayout
+        android:id="@+id/emptyState"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:padding="@dimen/margin_big"
+        android:gravity="center_vertical|center_horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/img_empty_state_icon"
+            android:layout_height="@dimen/img_empty_state_icon"
+            android:src="@drawable/ic_hot_tub"
+            android:layout_marginBottom="@dimen/margin_extra"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:text="@string/empty_state_history_title"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_title"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/empty_state_history_msg"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_default" />
+
+    </LinearLayout>
 
 </LinearLayout>

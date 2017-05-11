@@ -32,6 +32,7 @@ import br.com.ande.ui.presenter.impl.AndeDashPresenterImpl;
 import br.com.ande.ui.view.AndeDashView;
 import br.com.ande.ui.view.DashBoardView;
 import br.com.ande.ui.view.activity.DashBoardActivity;
+import br.com.ande.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -90,8 +91,8 @@ public class DashBoardFragment extends Fragment implements AndeDashView, SensorE
 
         ButterKnife.bind(this, view);
 
-        targetH = dp2px((int) (getResources().getDimension(R.dimen.img_dash_size) / getResources().getDisplayMetrics().density));
-        targetW = dp2px((int) (getResources().getDimension(R.dimen.img_dash_size) / getResources().getDisplayMetrics().density));
+        targetH = Utils.dp2px((int) (getResources().getDimension(R.dimen.img_dash_size) / getResources().getDisplayMetrics().density));
+        targetW = Utils.dp2px((int) (getResources().getDimension(R.dimen.img_dash_size) / getResources().getDisplayMetrics().density));
 
         this.presenter = new AndeDashPresenterImpl(this);
         this.user = new User();
@@ -227,10 +228,6 @@ public class DashBoardFragment extends Fragment implements AndeDashView, SensorE
     @Override
     public void setNullCountHistories() {
         txWalkRegister.setText(getString(R.string.steps_count_null));
-    }
-
-    private int dp2px(int dp) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
     }
 
     @Override
