@@ -12,6 +12,7 @@ public class Histoty {
     private int steps;
     private String startTime;
     private String finishTime;
+    private String durationTime;
 
     public Histoty() {
     }
@@ -21,6 +22,14 @@ public class Histoty {
         this.steps = steps;
         this.startTime = startTime;
         this.finishTime = finishTime;
+    }
+
+    public Histoty(int id, int steps, String startTime, String finishTime, String durationTime) {
+        this.id = id;
+        this.steps = steps;
+        this.startTime = startTime;
+        this.finishTime = finishTime;
+        this.durationTime = durationTime;
     }
 
     public int getId() {
@@ -53,5 +62,13 @@ public class Histoty {
 
     public void setFinishTime(String finishTime) {
         this.finishTime = finishTime;
+    }
+
+    public String getDurationTime() {
+        return durationTime;
+    }
+
+    public void setDurationTime(String durationTime) {
+        this.durationTime = durationTime;
     }
 }

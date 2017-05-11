@@ -12,15 +12,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class GeraBD extends SQLiteOpenHelper {
 
-    private static final String NOME_BANCO  = "ande.db";
-    public  static final String TABELA      = "history";
-    public  static final String ID          = "_id";
-    public  static final String STEPS       = "_steps";
-    public  static final String START_TIME  = "_start_time";
-    public  static final String FINISH_TIME = "_FINISH_time";
-    private static final int VERSAO         = 1;
+    private static final String NOME_BANCO      = "ande.db";
+    public  static final String TABELA          = "history";
+    public  static final String ID              = "_id";
+    public  static final String STEPS           = "_steps";
+    public  static final String START_TIME      = "_start_time";
+    public  static final String FINISH_TIME     = "_FINISH_time";
+    public  static final String DURATION_TIME   = "_DURATION_TIME";
+    private static final int VERSAO             = 1;
 
-    public static final String[] dados = new String[]{ID, STEPS, START_TIME, FINISH_TIME};
+    public static final String[] dados = new String[]{ID, STEPS, START_TIME, FINISH_TIME, DURATION_TIME};
 
     public GeraBD(Context context){
         super(context, NOME_BANCO, null, VERSAO);
@@ -32,7 +33,8 @@ public class GeraBD extends SQLiteOpenHelper {
                 "" + ID + " integer primary key autoincrement," +
                 STEPS + " integer," +
                 START_TIME + " text," +
-                FINISH_TIME + " text" +
+                FINISH_TIME + " text," +
+                DURATION_TIME + " text" +
                 ")";
         db.execSQL(sql);
     }
