@@ -37,6 +37,7 @@ public class ControllerBD {
         valores.put(GeraBD.STEPS, histoty.getSteps());
         valores.put(GeraBD.START_TIME, histoty.getStartTime());
         valores.put(GeraBD.FINISH_TIME, histoty.getFinishTime());
+        valores.put(GeraBD.DURATION_TIME, histoty.getDurationTime());
 
         resultado = db.insert(GeraBD.TABELA, null, valores);
         db.close();
@@ -115,6 +116,7 @@ public class ControllerBD {
             Histoty histoty = new Histoty(
                     Integer.parseInt(row[i++].toString()),
                     Integer.parseInt(row[i++].toString()),
+                    row[i++].toString(),
                     row[i++].toString(),
                     row[i++].toString()
             );

@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -32,6 +33,7 @@ import br.com.ande.ui.presenter.impl.AndeDashPresenterImpl;
 import br.com.ande.ui.view.AndeDashView;
 import br.com.ande.ui.view.DashBoardView;
 import br.com.ande.ui.view.activity.DashBoardActivity;
+import br.com.ande.util.DateUtils;
 import br.com.ande.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -66,8 +68,8 @@ public class DashBoardFragment extends Fragment implements AndeDashView, SensorE
     private Timer   timer;
 
 //    TODO:: set timer to 1min
-//    private long    WAIT_DELAY_FOR_NEXT_STEP = 60000;
-    private long    WAIT_DELAY_FOR_NEXT_STEP = 10000;
+    private long    WAIT_DELAY_FOR_NEXT_STEP = 60000;
+//    private long    WAIT_DELAY_FOR_NEXT_STEP = 10000;
     private boolean isWaitNextStepIsStarted;
     private boolean isLoadfirtsStep = true;
     private long    initialTimeStamp;
