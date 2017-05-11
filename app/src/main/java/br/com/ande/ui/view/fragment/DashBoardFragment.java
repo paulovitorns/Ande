@@ -219,7 +219,7 @@ public class DashBoardFragment extends Fragment implements AndeDashView, SensorE
 
     @Override
     public void updateCountHistories(int histories) {
-        String str = txWalkRegister.getText().toString();
+        String str = getString(R.string.steps_count);
         str = str.replace("...", String.valueOf(histories));
         txWalkRegister.setText(str);
     }
