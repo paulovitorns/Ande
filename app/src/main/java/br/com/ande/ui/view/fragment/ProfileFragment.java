@@ -21,6 +21,7 @@ import android.widget.EditText;
 import java.io.File;
 import java.io.IOException;
 
+import br.com.ande.BuildConfig;
 import br.com.ande.R;
 import br.com.ande.model.User;
 import br.com.ande.ui.presenter.ProfilePresenter;
@@ -221,7 +222,7 @@ public class ProfileFragment extends Fragment implements ProfileView {
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(getContext(),
-                        "br.com.ande.fileprovider",
+                        BuildConfig.APPLICATION_ID+".fileprovider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
