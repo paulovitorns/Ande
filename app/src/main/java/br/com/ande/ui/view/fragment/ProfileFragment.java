@@ -56,7 +56,8 @@ public class ProfileFragment extends Fragment implements ProfileView {
 
     private User                user;
     private ProfilePresenter    presenter;
-    static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int REQUEST_IMAGE_CAPTURE  = 1;
+    static final int REQUEST_RESULT_CODE    = -1;
 
     private int targetW;
     private int targetH;
@@ -241,7 +242,6 @@ public class ProfileFragment extends Fragment implements ProfileView {
         // Save a file: path for use with ACTION_VIEW intents
         user.setImgNameResource(image.getAbsolutePath());
 
-        presenter.updateImagemUser(user);
         return image;
     }
 
@@ -271,12 +271,19 @@ public class ProfileFragment extends Fragment implements ProfileView {
         bmOptions.inPurgeable = true;
 
         Bitmap bitmap = BitmapFactory.decodeFile(user.getImgNameResource(), bmOptions);
+
         imageView.setImageBitmap(bitmap);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == REQUEST_RESULT_CODE) {
+
+            if(user.getEmail() != null){
+                if(!user.getEmail().isEmpty())
+                    presenter.updateImagemUser(user);
+            }
+
             setPic();
         }
     }

@@ -224,6 +224,11 @@ public class DashBoardFragment extends Fragment implements AndeDashView, SensorE
         txWalkRegister.setText(str);
     }
 
+    @Override
+    public void setNullCountHistories() {
+        txWalkRegister.setText(getString(R.string.steps_count_null));
+    }
+
     private int dp2px(int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
     }
