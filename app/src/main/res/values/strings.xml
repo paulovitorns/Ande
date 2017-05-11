@@ -26,6 +26,7 @@
     <!--walk dashboard-->
     <string name="user_name">Olá, visitante!</string>
     <string name="steps_count">... caminhada(s) registrada(s)</string>
+    <string name="steps_count_null">nenhum resgistro encontrado</string>
     <string name="intro_last_walke">última caminhada</string>
     <string name="last_walk">você deu</string>
     <string name="last_walk_compl">passo(s) em sua última caminhada</string>

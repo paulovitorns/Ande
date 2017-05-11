@@ -45,6 +45,7 @@ public class AndeDashPresenterImpl implements AndeDashPresenter {
             this.view.updateCountHistories(histoties.size());
         }else {
             this.view.loadLastHistory(null);
+            this.view.setNullCountHistories();
         }
 
     }
