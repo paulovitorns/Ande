@@ -75,7 +75,7 @@ public class DashBoardActivity extends BaseActivity implements DashBoardView {
     @Override
     public void onBackPressed() {
         if(confirmedExit) {
-            super.onBackPressed();
+            finish();
         } else {
             Toast.makeText(getApplicationContext(), getString(R.string.toast_exit_alert), Toast.LENGTH_SHORT).show();
             loadDefaultFragment();

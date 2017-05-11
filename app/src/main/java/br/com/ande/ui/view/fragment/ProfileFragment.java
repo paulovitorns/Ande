@@ -31,6 +31,7 @@ import br.com.ande.ui.view.component.CustomDialog;
 import br.com.ande.ui.view.component.DateValidateWatcher;
 import br.com.ande.ui.view.component.SimpleValidateWatcher;
 import br.com.ande.util.EditTextValidadeUtils;
+import br.com.ande.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -78,8 +79,8 @@ public class ProfileFragment extends Fragment implements ProfileView {
 
         ButterKnife.bind(this, view);
 
-        targetH = dp2px((int) (getResources().getDimension(R.dimen.img_profile_size) / getResources().getDisplayMetrics().density));
-        targetW = dp2px((int) (getResources().getDimension(R.dimen.img_profile_size) / getResources().getDisplayMetrics().density));
+        targetH = Utils.dp2px((int) (getResources().getDimension(R.dimen.img_profile_size) / getResources().getDisplayMetrics().density));
+        targetW = Utils.dp2px((int) (getResources().getDimension(R.dimen.img_profile_size) / getResources().getDisplayMetrics().density));
 
         edtName.addTextChangedListener(new SimpleValidateWatcher(edtName, edtLayoutName, R.string.error_empty_name, getContext()));
         edtBirth.addTextChangedListener(new DateValidateWatcher(edtBirth, edtLayoutBirth, R.string.error_empty_birth, getContext()));
@@ -286,10 +287,6 @@ public class ProfileFragment extends Fragment implements ProfileView {
 
             setPic();
         }
-    }
-
-    private int dp2px(int dp) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
     }
 
 }

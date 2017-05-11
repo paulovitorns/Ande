@@ -37,4 +37,16 @@
     <string name="duration_of_walk">Sua caminhada durou</string>
     <string name="initial_duration_mark">...h e ...m</string>
 
+    <!--history-->
+    <string name="history_title">Seu hístorico de caminhadas</string>
+
+
+    <!--EmptyState-->
+    <string name="empty_state_history_title">Ainda sem andar?</string>
+    <string name="empty_state_history_msg">Parece que você ainda não tem registros das suas caminhadas. Para começar, basta andar por ai ;)</string>
+
+    <!--Splash Screen-->
+    <string name="splash_title">Bem-vindo!</string>
+    <string name="splash_msg">O Ande te ajuda a monitorar seus passos e mostra o quanto eles são importantes para a sua saúde.</string>
+
 </resources>
