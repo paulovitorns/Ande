@@ -7,59 +7,65 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    <uses-feature android:name="android.hardware.camera" android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:allowBackup="true"
         android:name=".Ande"
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="br.com.ande.fileprovider"
+            android:authorities="${applicationId}.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
 
-        <!--<receiver-->
-            <!--android:name=".util.LocalNotificationReceiver"-->
-            <!--android:enabled="true"-->
-            <!--android:exported="true"-->
-            <!--android:process=":remote">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.media.action.DISPLAY_NOTIFICATION" />-->
+        <!-- <receiver -->
+        <!-- android:name=".util.LocalNotificationReceiver" -->
+        <!-- android:enabled="true" -->
+        <!-- android:exported="true" -->
+        <!-- android:process=":remote"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.media.action.DISPLAY_NOTIFICATION" /> -->
 
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
 
-        <!--<meta-data-->
-            <!--android:name="com.google.android.geo.API_KEY"-->
-            <!--android:value="@string/google_app_id" />-->
+        <!-- <category android:name="android.intent.category.DEFAULT" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
+
+
+        <!-- <meta-data -->
+        <!-- android:name="com.google.android.geo.API_KEY" -->
+        <!-- android:value="@string/google_app_id" /> -->
+
+        <!-- <meta-data -->
+        <!-- android:name="io.fabric.ApiKey" -->
+        <!-- android:value="e388b8ac69491fc903bd486ce0c77548110ee18f" /> -->
 
         <activity
-            android:name=".ui.view.activity.DashBoardActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name">
+            android:name=".ui.view.activity.SplashScreenActivity"
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!--<meta-data-->
-            <!--android:name="io.fabric.ApiKey"-->
-            <!--android:value="e388b8ac69491fc903bd486ce0c77548110ee18f" />-->
-
+        <activity
+            android:name=".ui.view.activity.DashBoardActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

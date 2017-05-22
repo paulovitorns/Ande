@@ -10,13 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/margin_default"
-        android:paddingRight="@dimen/margin_default"
-        android:paddingTop="@dimen/margin_big">
+        android:paddingRight="@dimen/margin_default">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingTop="@dimen/margin_big"
             android:weightSum="4">
 
             <RelativeLayout
@@ -145,6 +145,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/btn_height"
                 android:layout_marginTop="@dimen/margin_big"
+                android:layout_marginBottom="@dimen/margin_default"
                 android:background="@color/colorPrimary"
                 android:text="@string/btn_save"
                 android:textAllCaps="false"

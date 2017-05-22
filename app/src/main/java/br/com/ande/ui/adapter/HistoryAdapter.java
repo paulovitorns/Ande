@@ -46,7 +46,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
         if(histoty != null){
             holder.steps.setText(String.valueOf(histoty.getSteps()));
-            holder.duration.setText("0h e 40m");
+            holder.duration.setText(histoty.getDurationTime());
         }
 
     }

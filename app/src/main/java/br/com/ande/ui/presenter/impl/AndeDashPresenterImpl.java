@@ -9,6 +9,7 @@ import br.com.ande.model.Session;
 import br.com.ande.sqlLite.entity.Histoty;
 import br.com.ande.ui.presenter.AndeDashPresenter;
 import br.com.ande.ui.view.AndeDashView;
+import br.com.ande.util.DateUtils;
 
 /**
  * © Copyright 2017 Ande.
@@ -45,6 +46,7 @@ public class AndeDashPresenterImpl implements AndeDashPresenter {
             this.view.updateCountHistories(histoties.size());
         }else {
             this.view.loadLastHistory(null);
+            this.view.setNullCountHistories();
         }
 
     }
@@ -62,9 +64,17 @@ public class AndeDashPresenterImpl implements AndeDashPresenter {
     @Override
     public void insertNewHistory(Histoty histoty) {
 
+        histoty.setDurationTime(
+                DateUtils.printDifference(
+                        DateUtils.getDateFromTimestamp(Long.parseLong(histoty.getStartTime())),
+                        DateUtils.getDateFromTimestamp(Long.parseLong(histoty.getFinishTime()))
+                )
+        );
+
         if(Ande.getControllerBD().insereDados(histoty)){
             this.updateLastHistory();
         }
+
     }
 
     @Override

@@ -18,6 +18,8 @@ import br.com.ande.ui.presenter.DashboardPresenter;
 import br.com.ande.ui.presenter.impl.DashboardPresenterImpl;
 import br.com.ande.ui.view.DashBoardView;
 import br.com.ande.ui.view.fragment.DashBoardFragment;
+import br.com.ande.ui.view.fragment.HistoryFragment;
+import br.com.ande.ui.view.fragment.ProfileFragment;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -33,6 +35,7 @@ public class DashBoardActivity extends BaseActivity implements DashBoardView {
 
     private boolean confirmedExit = false;
     private DashboardPresenter presenter;
+    private Menu bottomNavigationViewMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +49,7 @@ public class DashBoardActivity extends BaseActivity implements DashBoardView {
     @Override
     public void setupBottomNavigationView() {
 
-        Menu bottomNavigationViewMenu = bottomNavigationView.getMenu();
-
-        bottomNavigationViewMenu.findItem(R.id.nav_account).setChecked(false);
-
-        bottomNavigationViewMenu.findItem(R.id.nav_history).setChecked(false);
-
-        bottomNavigationViewMenu.findItem(R.id.nav_dash).setChecked(true);
+        bottomNavigationViewMenu = bottomNavigationView.getMenu();
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -78,7 +75,7 @@ public class DashBoardActivity extends BaseActivity implements DashBoardView {
     @Override
     public void onBackPressed() {
         if(confirmedExit) {
-            super.onBackPressed();
+            finish();
         } else {
             Toast.makeText(getApplicationContext(), getString(R.string.toast_exit_alert), Toast.LENGTH_SHORT).show();
             loadDefaultFragment();
@@ -87,6 +84,10 @@ public class DashBoardActivity extends BaseActivity implements DashBoardView {
     }
     @Override
     public void loadDefaultFragment() {
+
+        bottomNavigationViewMenu.findItem(R.id.nav_account).setChecked(false);
+        bottomNavigationViewMenu.findItem(R.id.nav_history).setChecked(false);
+        bottomNavigationViewMenu.findItem(R.id.nav_dash).setChecked(true);
 
         DashBoardFragment fragment = DashBoardFragment.newInstance();
 
@@ -108,5 +109,17 @@ public class DashBoardActivity extends BaseActivity implements DashBoardView {
     @Override
     public View getBottomNavigationView() {
         return null;
+    }
+
+    @Override
+    public void onClickProfile() {
+        bottomNavigationViewMenu.findItem(R.id.nav_account).setChecked(true);
+        changeFragment(ProfileFragment.newInstance());
+    }
+
+    @Override
+    public void onClickHistory() {
+        bottomNavigationViewMenu.findItem(R.id.nav_history).setChecked(true);
+        changeFragment(HistoryFragment.newInstance());
     }
 }

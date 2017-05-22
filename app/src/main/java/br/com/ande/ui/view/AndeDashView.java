@@ -21,5 +21,7 @@ public interface AndeDashView extends BaseView {
 
     void updateCountHistories(int histories);
 
+    void setNullCountHistories();
+
     void sendNewHistory();
 }

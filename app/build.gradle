@@ -1,21 +1,64 @@
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+
 apply plugin: 'com.android.application'
 
+def versionMajor = 1
+def versionMinor = 0
+def versionPatch = 0
+
+def buildTime       = new Date().format("yyyy-MM-dd'T'HH:mm'Z'", TimeZone.getTimeZone("UTC"))
+def versionSuffix   = "-" + getDateTimeVersion();
+def versionCodeGen  = getVersionCode();
+
 android {
+
     compileSdkVersion 25
     buildToolsVersion "25.0.1"
+
     defaultConfig {
         applicationId "br.com.ande"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode versionCodeGen
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+        buildConfigField "String", "BUILD_TIME", "\"${buildTime}\""
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
     }
+
     buildTypes {
+        debug {
+            applicationIdSuffix ".dev"
+            versionNameSuffix "${versionSuffix}"
+        }
         release {
+            debuggable false
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles 'proguard-rules.pro'
+        }
+    }
+
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+
+    aaptOptions {
+        cruncherEnabled = false
+    }
+
+    dexOptions {
+        jumboMode true
+    }
+
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        flatDir {
+            dirs 'libs'
         }
     }
 }
@@ -34,5 +77,16 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
+    compile 'com.android.support.constraint:constraint-layout:1.0.1'
     testCompile 'junit:junit:4.12'
+}
+
+def getDateTimeVersion() {
+    DateFormat df = new SimpleDateFormat("yyMMdd.HHmm");
+    return df.format(new Date());
+}
+
+def getVersionCode() {
+    DateFormat df = new SimpleDateFormat("yyyyMMddHH");
+    return Integer.parseInt(df.format(new Date()));
 }

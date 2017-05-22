@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -31,8 +32,12 @@ import br.com.ande.ui.presenter.AndeDashPresenter;
 import br.com.ande.ui.presenter.impl.AndeDashPresenterImpl;
 import br.com.ande.ui.view.AndeDashView;
 import br.com.ande.ui.view.DashBoardView;
+import br.com.ande.ui.view.activity.DashBoardActivity;
+import br.com.ande.util.DateUtils;
+import br.com.ande.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -63,8 +68,8 @@ public class DashBoardFragment extends Fragment implements AndeDashView, SensorE
     private Timer   timer;
 
 //    TODO:: set timer to 1min
-//    private long    WAIT_DELAY_FOR_NEXT_STEP = 60000;
-    private long    WAIT_DELAY_FOR_NEXT_STEP = 10000;
+    private long    WAIT_DELAY_FOR_NEXT_STEP = 60000;
+//    private long    WAIT_DELAY_FOR_NEXT_STEP = 10000;
     private boolean isWaitNextStepIsStarted;
     private boolean isLoadfirtsStep = true;
     private long    initialTimeStamp;
@@ -88,8 +93,8 @@ public class DashBoardFragment extends Fragment implements AndeDashView, SensorE
 
         ButterKnife.bind(this, view);
 
-        targetH = dp2px((int) (getResources().getDimension(R.dimen.img_dash_size) / getResources().getDisplayMetrics().density));
-        targetW = dp2px((int) (getResources().getDimension(R.dimen.img_dash_size) / getResources().getDisplayMetrics().density));
+        targetH = Utils.dp2px((int) (getResources().getDimension(R.dimen.img_dash_size) / getResources().getDisplayMetrics().density));
+        targetW = Utils.dp2px((int) (getResources().getDimension(R.dimen.img_dash_size) / getResources().getDisplayMetrics().density));
 
         this.presenter = new AndeDashPresenterImpl(this);
         this.user = new User();
@@ -217,13 +222,14 @@ public class DashBoardFragment extends Fragment implements AndeDashView, SensorE
 
     @Override
     public void updateCountHistories(int histories) {
-        String str = txWalkRegister.getText().toString();
+        String str = getString(R.string.steps_count);
         str = str.replace("...", String.valueOf(histories));
         txWalkRegister.setText(str);
     }
 
-    private int dp2px(int dp) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
+    @Override
+    public void setNullCountHistories() {
+        txWalkRegister.setText(getString(R.string.steps_count_null));
     }
 
     @Override
@@ -320,6 +326,16 @@ public class DashBoardFragment extends Fragment implements AndeDashView, SensorE
         currentTimeStamp    = 0;
 
         presenter.insertNewHistory(histoty);
+    }
+
+    @OnClick(R.id.containerUserInfo)
+    public void onClickProfile(){
+        ((DashBoardActivity) getActivity()).onClickProfile();
+    }
+
+    @OnClick(R.id.containerLast)
+    public void onClickHistory(){
+        ((DashBoardActivity) getActivity()).onClickHistory();
     }
 
 }
