@@ -21,6 +21,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <service android:name="br.com.ande.service.impl.StepCountServiceImpl"/>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -31,18 +34,16 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <!-- <receiver -->
-        <!-- android:name=".util.LocalNotificationReceiver" -->
-        <!-- android:enabled="true" -->
-        <!-- android:exported="true" -->
-        <!-- android:process=":remote"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.media.action.DISPLAY_NOTIFICATION" /> -->
-
-
-        <!-- <category android:name="android.intent.category.DEFAULT" /> -->
-        <!-- </intent-filter> -->
-        <!-- </receiver> -->
+         <receiver
+         android:name="br.com.ande.util.NotificationReceiver"
+         android:enabled="true"
+         android:exported="true"
+         android:process=":remote">
+             <intent-filter>
+                 <action android:name="android.media.action.DISPLAY_NOTIFICATION" />
+                 <category android:name="android.intent.category.DEFAULT" />
+             </intent-filter>
+         </receiver>
 
 
         <!-- <meta-data -->

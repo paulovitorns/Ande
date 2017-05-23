@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import br.com.ande.R;
-import br.com.ande.sqlLite.entity.Histoty;
+import br.com.ande.sqlLite.entity.History;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -22,12 +22,12 @@ import butterknife.ButterKnife;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder>  {
 
-    private List<Histoty> histotyList;
+    private List<History> historyList;
     private Context context;
 
 
-    public HistoryAdapter(List<Histoty> histotyList, Context context) {
-        this.histotyList    = histotyList;
+    public HistoryAdapter(List<History> historyList, Context context) {
+        this.historyList = historyList;
         this.context        = context;
     }
 
@@ -42,18 +42,18 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        Histoty histoty = histotyList.get(position);
+        History history = historyList.get(position);
 
-        if(histoty != null){
-            holder.steps.setText(String.valueOf(histoty.getSteps()));
-            holder.duration.setText(histoty.getDurationTime());
+        if(history != null){
+            holder.steps.setText(String.valueOf(history.getSteps()));
+            holder.duration.setText(history.getDurationTime());
         }
 
     }
 
     @Override
     public int getItemCount() {
-        return histotyList.size();
+        return historyList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{

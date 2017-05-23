@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,19 +20,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import br.com.ande.R;
 import br.com.ande.model.User;
-import br.com.ande.sqlLite.entity.Histoty;
+import br.com.ande.sqlLite.entity.History;
 import br.com.ande.ui.presenter.AndeDashPresenter;
 import br.com.ande.ui.presenter.impl.AndeDashPresenterImpl;
 import br.com.ande.ui.view.AndeDashView;
 import br.com.ande.ui.view.DashBoardView;
 import br.com.ande.ui.view.activity.DashBoardActivity;
-import br.com.ande.util.DateUtils;
 import br.com.ande.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -46,7 +43,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Empresa : Ande app.
  */
 
-public class DashBoardFragment extends Fragment implements AndeDashView, SensorEventListener {
+public class DashBoardFragment extends Fragment implements AndeDashView {
 
     @Bind(R.id.txUserName)      TextView    txUserName;
     @Bind(R.id.txWalkRegister)  TextView    txWalkRegister;
@@ -59,23 +56,10 @@ public class DashBoardFragment extends Fragment implements AndeDashView, SensorE
 
     private int     targetW;
     private int     targetH;
-    private int     steps;
 
-    private AndeDashPresenter presenter;
-    private User    user;
-    private SensorManager   sensorManager;
-    private Sensor  mSteps;
-    private Timer   timer;
+    private AndeDashPresenter   presenter;
+    private User                user;
 
-//    TODO:: set timer to 1min
-    private long    WAIT_DELAY_FOR_NEXT_STEP = 60000;
-//    private long    WAIT_DELAY_FOR_NEXT_STEP = 10000;
-    private boolean isWaitNextStepIsStarted;
-    private boolean isLoadfirtsStep = true;
-    private long    initialTimeStamp;
-    private long    currentTimeStamp;
-    private long    finalTimeStamp;
-    private int     lastId;
 
     public DashBoardFragment(){
 
@@ -99,8 +83,6 @@ public class DashBoardFragment extends Fragment implements AndeDashView, SensorE
         this.presenter = new AndeDashPresenterImpl(this);
         this.user = new User();
 
-        this.timer = new Timer();
-
         return view;
     }
 
@@ -112,21 +94,11 @@ public class DashBoardFragment extends Fragment implements AndeDashView, SensorE
     @Override
     public void onResume() {
         super.onResume();
-        sensorManager.registerListener(this, mSteps, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        sensorManager.unregisterListener(this);
-
-        if(this.timer != null){
-            this.timer.cancel();
-            this.timer.purge();
-            this.timer = null;
-        }
-
-        isLoadfirtsStep = true;
     }
 
     @Override
@@ -141,17 +113,6 @@ public class DashBoardFragment extends Fragment implements AndeDashView, SensorE
         if(user.getImgNameResource() != null){
             if(!user.getImgNameResource().isEmpty())
                 setPic();
-        }
-
-    }
-
-    @Override
-    public void startWalkListeners() {
-        sensorManager = (SensorManager) getContext().getSystemService(Context.SENSOR_SERVICE);
-        if(sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null){
-            mSteps = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-        }else{
-            Toast.makeText(getContext(), "Você não tem o sensor de passos", Toast.LENGTH_LONG).show();
         }
 
     }
@@ -207,16 +168,12 @@ public class DashBoardFragment extends Fragment implements AndeDashView, SensorE
     }
 
     @Override
-    public void loadLastHistory(Histoty histoty) {
-        if(histoty == null){
-
+    public void loadLastHistory(History history) {
+        if(history == null){
             containerLast.setVisibility(View.GONE);
-            lastId = 1;
         }else{
-
             containerLast.setVisibility(View.VISIBLE);
-            txLastSteps.setText(String.valueOf(histoty.getSteps()));
-            lastId = histoty.getId() + 1;
+            txLastSteps.setText(String.valueOf(history.getSteps()));
         }
     }
 
@@ -233,100 +190,17 @@ public class DashBoardFragment extends Fragment implements AndeDashView, SensorE
     }
 
     @Override
-    public void onSensorChanged(SensorEvent sensorEvent) {
-        if(!isLoadfirtsStep){
-
-            if(initialTimeStamp == 0)
-                initialTimeStamp = sensorEvent.timestamp;
-
-            currentTimeStamp = sensorEvent.timestamp;
-
-            steps++;
-            setInfoToCurrentWalk(steps, true);
-
-            if(!isWaitNextStepIsStarted){
-                startNewTimer();
-            }else{
-                if(this.timer != null) {
-                    this.timer.cancel();
-                    this.timer.purge();
-                    this.timer = null;
-                }
-
-                startNewTimer();
-            }
-
-            Log.d("COUNT_STEPS", String.valueOf(steps));
-        }else{
-            isLoadfirtsStep = false;
-        }
-
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
-        steps = 0;
-    }
-
-    private void startNewTimer(){
-
-        if(this.timer == null)
-            this.timer = new Timer();
-
-        isWaitNextStepIsStarted = true;
-
-        this.timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-
-                getActivity().runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-
-                        isWaitNextStepIsStarted = false;
-                        finalTimeStamp = currentTimeStamp;
-                        sendNewHistory();
-                        steps = 0;
-                        setInfoToCurrentWalk(steps, false);
-                        Log.d("COUNT_STEPS_NEW", "VAMOS REINICIAR");
-
-                    }
-
-                });
-
-            }
-
-        }, WAIT_DELAY_FOR_NEXT_STEP);
-
-    }
-
-    private void setInfoToCurrentWalk(int steps, boolean isMoving){
-        if(isMoving)
-            imgIconAction.setImageResource(R.drawable.ic_directions_walk_white_48dp);
-        else
-            imgIconAction.setImageResource(R.drawable.ic_hot_tub_white_48dp);
-
+    public void setCurrentSteps(int steps) {
+        imgIconAction.setImageResource(R.drawable.ic_directions_walk_white_48dp);
         txActualSteps.setText(String.valueOf(steps));
     }
 
-
     @Override
-    public void sendNewHistory() {
-
-        Histoty histoty = new Histoty();
-
-        histoty.setId(lastId);
-        histoty.setSteps(steps);
-        histoty.setStartTime(String.valueOf(initialTimeStamp));
-        histoty.setFinishTime(String.valueOf(finalTimeStamp));
-
-        initialTimeStamp    = 0;
-        finalTimeStamp      = 0;
-        currentTimeStamp    = 0;
-
-        presenter.insertNewHistory(histoty);
+    public void setStopedWalk(int totalSteps) {
+        imgIconAction.setImageResource(R.drawable.ic_hot_tub_white_48dp);
+        txActualSteps.setText(String.valueOf(totalSteps));
     }
+
 
     @OnClick(R.id.containerUserInfo)
     public void onClickProfile(){
