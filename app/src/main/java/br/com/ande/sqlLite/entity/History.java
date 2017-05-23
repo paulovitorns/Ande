@@ -6,7 +6,7 @@ package br.com.ande.sqlLite.entity;
  * Empresa : Ande app.
  */
 
-public class Histoty {
+public class History {
 
     private int id;
     private int steps;
@@ -14,17 +14,17 @@ public class Histoty {
     private String finishTime;
     private String durationTime;
 
-    public Histoty() {
+    public History() {
     }
 
-    public Histoty(int id, int steps, String startTime, String finishTime) {
+    public History(int id, int steps, String startTime, String finishTime) {
         this.id = id;
         this.steps = steps;
         this.startTime = startTime;
         this.finishTime = finishTime;
     }
 
-    public Histoty(int id, int steps, String startTime, String finishTime, String durationTime) {
+    public History(int id, int steps, String startTime, String finishTime, String durationTime) {
         this.id = id;
         this.steps = steps;
         this.startTime = startTime;

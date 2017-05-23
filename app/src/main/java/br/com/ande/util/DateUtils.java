@@ -1,10 +1,7 @@
 package br.com.ande.util;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 /**
  * © Copyright 2017 Ande.
@@ -15,21 +12,9 @@ import java.util.TimeZone;
 public class DateUtils {
 
     public static Date getDateFromTimestamp(long timestamp){
-//        Calendar cal = Calendar.getInstance();
-//        cal.setTimeInMillis(timestamp);
-//        return cal.getTime();
         Calendar cal = Calendar.getInstance();
-        TimeZone tz = cal.getTimeZone();//get your local time zone.
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-        sdf.setTimeZone(tz);//set time zone.
-        String localTime = sdf.format(new Date(timestamp * 1000));
-        Date date = new Date();
-        try {
-            date = sdf.parse(localTime);//get local date
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return date;
+        cal.setTimeInMillis(timestamp);
+        return cal.getTime();
     }
 
     //1 minute = 60 seconds
@@ -68,13 +53,15 @@ public class DateUtils {
             hours = elapsedMinutes+"m";
         }
 
-//        System.out.printf(
-//                "%d days, %d hours, %d minutes, %d seconds%n",
-//                elapsedDays,
-//                elapsedHours, elapsedMinutes, elapsedSeconds);
-
         return hours;
 
+    }
+
+    public static long getCurrentTimeInMillis(){
+        Date date               = new Date();
+        Calendar cal            = Calendar.getInstance();
+        cal.setTime(date);
+        return cal.getTimeInMillis();
     }
 
 }

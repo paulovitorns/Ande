@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.ande.sqlLite.GeraBD;
-import br.com.ande.sqlLite.entity.Histoty;
+import br.com.ande.sqlLite.entity.History;
 
 /**
  * © Copyright 2017 Ande.
@@ -26,18 +26,18 @@ public class ControllerBD {
         banco = new GeraBD(context);
     }
 
-    public boolean insereDados(Histoty histoty){
+    public boolean insereDados(History history){
         ContentValues valores;
         long resultado;
 
         db = banco.getWritableDatabase();
         valores = new ContentValues();
 
-        valores.put(GeraBD.ID, histoty.getId());
-        valores.put(GeraBD.STEPS, histoty.getSteps());
-        valores.put(GeraBD.START_TIME, histoty.getStartTime());
-        valores.put(GeraBD.FINISH_TIME, histoty.getFinishTime());
-        valores.put(GeraBD.DURATION_TIME, histoty.getDurationTime());
+        valores.put(GeraBD.ID, history.getId());
+        valores.put(GeraBD.STEPS, history.getSteps());
+        valores.put(GeraBD.START_TIME, history.getStartTime());
+        valores.put(GeraBD.FINISH_TIME, history.getFinishTime());
+        valores.put(GeraBD.DURATION_TIME, history.getDurationTime());
 
         resultado = db.insert(GeraBD.TABELA, null, valores);
         db.close();
@@ -104,8 +104,8 @@ public class ControllerBD {
         return result;
     }
 
-    public List<Histoty> getHistories(){
-        List<Histoty> histoties = new ArrayList<>();
+    public List<History> getHistories(){
+        List<History> histoties = new ArrayList<>();
         Cursor cursor = carregaHistories();
         List<Object[]> objects = cursorToTableRows(cursor);
 
@@ -113,7 +113,7 @@ public class ControllerBD {
 
         for (Object[] row : objects){
             int i = 0;
-            Histoty histoty = new Histoty(
+            History history = new History(
                     Integer.parseInt(row[i++].toString()),
                     Integer.parseInt(row[i++].toString()),
                     row[i++].toString(),
@@ -121,7 +121,7 @@ public class ControllerBD {
                     row[i++].toString()
             );
 
-            histoties.add(histoty);
+            histoties.add(history);
         }
 
         return histoties;

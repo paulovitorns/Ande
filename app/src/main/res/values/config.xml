@@ -3,4 +3,7 @@
     <!--Strings of Session-->
     <string name="shared_session">shared_session</string>
     <string name="shared_session_data">shared_session_data</string>
+    <string name="local_notification_param_id">id</string>
+    <string name="local_notification_param_title">title</string>
+    <string name="local_notification_param_msg">msg</string>
 </resources>
