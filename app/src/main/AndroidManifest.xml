@@ -47,7 +47,7 @@
 
         <!-- <meta-data -->
         <!-- android:name="io.fabric.ApiKey" -->
-        <!-- android:value="e388b8ac69491fc903bd486ce0c77548110ee18f" /> -->
+        <!-- android:value="" /> -->
 
         <activity
             android:name=".ui.view.activity.SplashScreenActivity"
