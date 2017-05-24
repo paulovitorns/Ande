@@ -6,4 +6,6 @@
     <string name="local_notification_param_id">id</string>
     <string name="local_notification_param_title">title</string>
     <string name="local_notification_param_msg">msg</string>
+    <integer name="wait_delay_for_next_step">60000</integer>
+    <integer name="min_walked_time_to_send_notification">10</integer>
 </resources>

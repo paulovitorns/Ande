@@ -1,4 +1,4 @@
-package br.com.ande.service;
+package br.com.ande.common;
 
 import br.com.ande.sqlLite.entity.History;
 
