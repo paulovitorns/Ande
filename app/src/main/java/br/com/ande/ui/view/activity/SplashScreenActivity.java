@@ -13,6 +13,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import br.com.ande.R;
+import br.com.ande.service.impl.StepCountServiceImpl;
 import br.com.ande.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -39,6 +40,8 @@ public class SplashScreenActivity extends BaseActivity {
 
         ButterKnife.bind(this);
 
+        startService(new Intent(this, StepCountServiceImpl.class));
+
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -46,6 +49,7 @@ public class SplashScreenActivity extends BaseActivity {
                     @Override
                     public void run() {
                         startActivity(new Intent(SplashScreenActivity.this, DashBoardActivity.class));
+                        finish();
                     }
                 });
             }

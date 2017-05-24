@@ -1,7 +1,5 @@
 package br.com.ande.ui.presenter;
 
-import br.com.ande.sqlLite.entity.Histoty;
-
 /**
  * © Copyright 2017 Ande.
  * Autor : Paulo Sales - dev@paulovns.com.br
@@ -10,7 +8,7 @@ import br.com.ande.sqlLite.entity.Histoty;
 
 public interface AndeDashPresenter extends BasePresenter {
 
-    void insertNewHistory(Histoty histoty);
+    void showStepCounter(int steps, int totalSteps, boolean isMoving);
 
     void updateLastHistory();
 

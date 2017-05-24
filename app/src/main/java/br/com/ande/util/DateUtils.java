@@ -1,10 +1,8 @@
 package br.com.ande.util;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
+import java.util.HashMap;
 
 /**
  * © Copyright 2017 Ande.
@@ -15,27 +13,17 @@ import java.util.TimeZone;
 public class DateUtils {
 
     public static Date getDateFromTimestamp(long timestamp){
-//        Calendar cal = Calendar.getInstance();
-//        cal.setTimeInMillis(timestamp);
-//        return cal.getTime();
         Calendar cal = Calendar.getInstance();
-        TimeZone tz = cal.getTimeZone();//get your local time zone.
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-        sdf.setTimeZone(tz);//set time zone.
-        String localTime = sdf.format(new Date(timestamp * 1000));
-        Date date = new Date();
-        try {
-            date = sdf.parse(localTime);//get local date
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return date;
+        cal.setTimeInMillis(timestamp);
+        return cal.getTime();
     }
 
     //1 minute = 60 seconds
     //1 hour = 60 x 60 = 3600
     //1 day = 3600 x 24 = 86400
-    public static String printDifference(Date startDate, Date endDate){
+    public static HashMap<DATE_DIFFERENCE, Object> printDifference(Date startDate, Date endDate){
+
+        HashMap<DATE_DIFFERENCE, Object> data = new HashMap<>();
 
         //milliseconds
         long different = endDate.getTime() - startDate.getTime();
@@ -65,16 +53,35 @@ public class DateUtils {
         if(elapsedHours > 0) {
             hours = elapsedHours + "h e " + elapsedMinutes + "m";
         }else{
-            hours = elapsedMinutes+"m";
+            if(elapsedMinutes <= 0 )
+                hours = elapsedSeconds+"s";
+            else
+                hours = elapsedMinutes+"m";
         }
 
-//        System.out.printf(
-//                "%d days, %d hours, %d minutes, %d seconds%n",
-//                elapsedDays,
-//                elapsedHours, elapsedMinutes, elapsedSeconds);
+        data.put(DATE_DIFFERENCE.DAYS, elapsedDays);
+        data.put(DATE_DIFFERENCE.HOUR, elapsedHours);
+        data.put(DATE_DIFFERENCE.MINUTES, elapsedMinutes);
+        data.put(DATE_DIFFERENCE.SECONDS, elapsedSeconds);
+        data.put(DATE_DIFFERENCE.STRING, hours);
 
-        return hours;
+        return data;
 
+    }
+
+    public static long getCurrentTimeInMillis(){
+        Date date               = new Date();
+        Calendar cal            = Calendar.getInstance();
+        cal.setTime(date);
+        return cal.getTimeInMillis();
+    }
+
+    public enum DATE_DIFFERENCE{
+        DAYS,
+        HOUR,
+        MINUTES,
+        SECONDS,
+        STRING
     }
 
 }

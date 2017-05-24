@@ -49,4 +49,10 @@
     <string name="splash_title">Bem-vindo!</string>
     <string name="splash_msg">O Ande te ajuda a monitorar seus passos e mostra o quanto eles são importantes para a sua saúde.</string>
 
+    <!--Local common message-->
+    <string name="local_title">Olá, ...!</string>
+    <string name="local_msg">Registramos uma caminhada de {steps} passo(s) com duração de {time}</string>
+    <string name="local_msg_first_line">Registramos uma caminhada de</string>
+    <string name="local_msg_second_line">{steps} passo(s) em {time}</string>
+
 </resources>
