@@ -15,9 +15,11 @@ import android.widget.Toast;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import br.com.ande.Ande;
+import br.com.ande.R;
 import br.com.ande.business.service.HistoriesService;
 import br.com.ande.business.service.impl.HistoriesServiceImpl;
-import br.com.ande.service.StepCountListener;
+import br.com.ande.common.StepCountListener;
 import br.com.ande.service.StepCountService;
 import br.com.ande.sqlLite.entity.History;
 import br.com.ande.util.DateUtils;
@@ -52,10 +54,9 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
     private int     steps = 0;
     private int     tSteps;
     private Timer   timer;
-//    private long    WAIT_DELAY_FOR_NEXT_STEP = 60000 * 5;
-    private long    WAIT_DELAY_FOR_NEXT_STEP = 10000;
+    private long    WAIT_DELAY_FOR_NEXT_STEP = Ande.getContext().getResources().getInteger(R.integer.wait_delay_for_next_step);
     private boolean isWaitNextStepStart;
-    private boolean isLoadfirtsStep = true;
+    private boolean isLoadfirtsStep;
 
     /**
      * Time metric
@@ -76,6 +77,8 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
     @Override
     public void onCreate() {
         super.onCreate();
+
+        Log.d(TAG, "step service Instantiated");
 
         service = new HistoriesServiceImpl();
 
@@ -99,8 +102,9 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
                 return START_STICKY;
             }
 
-            registered  = sensorManager.registerListener(this, mSteps, SensorManager.SENSOR_DELAY_FASTEST);
-            started     = true;
+            registered      = sensorManager.registerListener(this, mSteps, SensorManager.SENSOR_DELAY_FASTEST);
+            started         = true;
+            isLoadfirtsStep = false;
         }
         return START_STICKY;
     }
@@ -122,7 +126,7 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
         if(sensorEvent.sensor.getType() != Sensor.TYPE_STEP_COUNTER){
             return;
         }else{
-            if(!isLoadfirtsStep){
+            if(isLoadfirtsStep){
 
                 if(initialTimeStamp == 0)
                     initialTimeStamp = DateUtils.getCurrentTimeInMillis();
@@ -143,20 +147,21 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
                     resetCurrentTimer();
                 }
 
-                Log.d("COUNT_STEPS", String.valueOf(steps));
+                Log.d(TAG, String.valueOf(steps));
             }else{
-                isLoadfirtsStep = false;
+                isLoadfirtsStep = true;
             }
         }
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
-        // TODO Auto-generated method stub
+        steps = 0;
     }
 
     @Override
     public void resetCurrentTimer() {
+
         if(this.timer == null)
             this.timer = new Timer();
 
@@ -192,12 +197,13 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
         service.saveHistory(this, lastId, steps, initialTimeStamp, finalTimeStamp);
         initialTimeStamp    = 0;
         finalTimeStamp      = 0;
+        isLoadfirtsStep     = false;
     }
 
     @Override
     public void onInsertHistorySuccess(History history) {
         lastId = history.getId() + 1;
-        service.startLocalNotification(history);
+        service.shouldSendNotification(history);
     }
 
 }

@@ -2,6 +2,7 @@ package br.com.ande.util;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * © Copyright 2017 Ande.
@@ -20,7 +21,9 @@ public class DateUtils {
     //1 minute = 60 seconds
     //1 hour = 60 x 60 = 3600
     //1 day = 3600 x 24 = 86400
-    public static String printDifference(Date startDate, Date endDate){
+    public static HashMap<DATE_DIFFERENCE, Object> printDifference(Date startDate, Date endDate){
+
+        HashMap<DATE_DIFFERENCE, Object> data = new HashMap<>();
 
         //milliseconds
         long different = endDate.getTime() - startDate.getTime();
@@ -50,10 +53,19 @@ public class DateUtils {
         if(elapsedHours > 0) {
             hours = elapsedHours + "h e " + elapsedMinutes + "m";
         }else{
-            hours = elapsedMinutes+"m";
+            if(elapsedMinutes <= 0 )
+                hours = elapsedSeconds+"s";
+            else
+                hours = elapsedMinutes+"m";
         }
 
-        return hours;
+        data.put(DATE_DIFFERENCE.DAYS, elapsedDays);
+        data.put(DATE_DIFFERENCE.HOUR, elapsedHours);
+        data.put(DATE_DIFFERENCE.MINUTES, elapsedMinutes);
+        data.put(DATE_DIFFERENCE.SECONDS, elapsedSeconds);
+        data.put(DATE_DIFFERENCE.STRING, hours);
+
+        return data;
 
     }
 
@@ -62,6 +74,14 @@ public class DateUtils {
         Calendar cal            = Calendar.getInstance();
         cal.setTime(date);
         return cal.getTimeInMillis();
+    }
+
+    public enum DATE_DIFFERENCE{
+        DAYS,
+        HOUR,
+        MINUTES,
+        SECONDS,
+        STRING
     }
 
 }

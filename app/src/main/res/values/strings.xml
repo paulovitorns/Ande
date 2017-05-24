@@ -52,5 +52,7 @@
     <!--Local common message-->
     <string name="local_title">Olá, ...!</string>
     <string name="local_msg">Registramos uma caminhada de {steps} passo(s) com duração de {time}</string>
+    <string name="local_msg_first_line">Registramos uma caminhada de</string>
+    <string name="local_msg_second_line">{steps} passo(s) em {time}</string>
 
 </resources>
