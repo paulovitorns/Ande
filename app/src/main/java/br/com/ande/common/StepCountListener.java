@@ -1,6 +1,6 @@
 package br.com.ande.common;
 
-import br.com.ande.sqlLite.entity.History;
+import br.com.ande.dao.ActivityDao;
 
 /**
  * © Copyright 2017 Ande.
@@ -9,5 +9,5 @@ import br.com.ande.sqlLite.entity.History;
  */
 
 public interface StepCountListener {
-    void onInsertHistorySuccess(History history);
+    void onInsertHistorySuccess(ActivityDao dao);
 }
