@@ -27,7 +27,8 @@ public class Ande extends MultiDexApplication {
         super.onCreate();
 
         context         = getApplicationContext();
-        controllerBD    = new ControllerBD(context);
+        //TODO:: remove old ORM from application
+//        controllerBD    = new ControllerBD(context);
     }
 
     public static Context getContext() {

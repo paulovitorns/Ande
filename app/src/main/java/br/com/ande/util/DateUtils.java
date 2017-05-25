@@ -1,5 +1,7 @@
 package br.com.ande.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -76,6 +78,31 @@ public class DateUtils {
         return cal.getTimeInMillis();
     }
 
+    public static Date toDate(String data) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = sdf.parse(data);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+    public static String getCurrentDate(){
+        Calendar c          = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        return df.format(c.getTime());
+    }
+
+    public static boolean isCurrentDay(Date date){
+        return DateUtils.getCurrentDate().equals(date);
+    }
+
+    public static String dateToQueryString(Date date){
+        return new SimpleDateFormat("yyyy-MM-dd").format(date);
+    }
     public enum DATE_DIFFERENCE{
         DAYS,
         HOUR,

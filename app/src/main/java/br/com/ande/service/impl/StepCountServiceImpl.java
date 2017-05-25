@@ -20,6 +20,8 @@ import br.com.ande.R;
 import br.com.ande.business.service.HistoriesService;
 import br.com.ande.business.service.impl.HistoriesServiceImpl;
 import br.com.ande.common.StepCountListener;
+import br.com.ande.dao.ActivityDao;
+import br.com.ande.dao.HistoryDao;
 import br.com.ande.service.StepCountService;
 import br.com.ande.sqlLite.entity.History;
 import br.com.ande.util.DateUtils;
@@ -49,12 +51,12 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
     /**
      * Global data to check if service is up and registered the steps
      */
-    private boolean started     = false;
-    private boolean registered  = false;
-    private int     steps = 0;
-    private int     tSteps;
+    private boolean started                     = false;
+    private boolean registered                  = false;
+    private int     steps                       = 0;
+    private int     tSteps                      = 0;
     private Timer   timer;
-    private long    WAIT_DELAY_FOR_NEXT_STEP = Ande.getContext().getResources().getInteger(R.integer.wait_delay_for_next_step);
+    private long    WAIT_DELAY_FOR_NEXT_STEP    = Ande.getContext().getResources().getInteger(R.integer.wait_delay_for_next_step);
     private boolean isWaitNextStepStart;
     private boolean isLoadfirtsStep;
 
@@ -65,9 +67,9 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
     private long    finalTimeStamp;
 
     /**
-     * Last id from SqlLite history register
+     * historyDao object for take any activity created into current day
      */
-    private int     lastId;
+    private HistoryDao historyDao;
 
     /**
      * Service to save histories into DB
@@ -82,7 +84,7 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
 
         service = new HistoriesServiceImpl();
 
-        lastId = service.initCountHistories();
+        this.verifyHasDayChanged();
 
         sensorManager   = null;
         mSteps          = null;
@@ -160,6 +162,37 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
     }
 
     @Override
+    public void verifyHasDayChanged() {
+        if(historyDao == null){
+            this.loadLastHistory();
+            return;
+        }
+
+        if(historyDao.date.before(DateUtils.toDate(DateUtils.getCurrentDate()))){
+            this.createHistory();
+        }else{
+            tSteps = historyDao.steps;
+        }
+    }
+
+    @Override
+    public void createHistory() {
+        //TODO::Implement service to save last history and create a new history
+
+        historyDao  = new HistoryDao(HistoryDao.nextId(), DateUtils.toDate(DateUtils.getCurrentDate()), 0);
+        tSteps      = 0;
+    }
+
+    @Override
+    public void loadLastHistory() {
+        historyDao  = HistoryDao.findById(HistoryDao.class, HistoryDao.lastId());
+        if(historyDao == null)
+            historyDao = new HistoryDao(HistoryDao.nextId(), DateUtils.toDate(DateUtils.getCurrentDate()), tSteps);
+
+        this.verifyHasDayChanged();
+    }
+
+    @Override
     public void resetCurrentTimer() {
 
         if(this.timer == null)
@@ -194,16 +227,25 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
 
     @Override
     public void pushNewHistory() {
-        service.saveHistory(this, lastId, steps, initialTimeStamp, finalTimeStamp);
+
+        this.verifyHasDayChanged();
+
+        historyDao.steps = tSteps;
+        historyDao.save();
+
+        ActivityDao activityDao = new ActivityDao(
+            ActivityDao.nextId(), steps, initialTimeStamp, finalTimeStamp, null, 0.0, 0.0, historyDao
+        );
+
+        service.saveHistory(this, activityDao);
         initialTimeStamp    = 0;
         finalTimeStamp      = 0;
         isLoadfirtsStep     = false;
     }
 
     @Override
-    public void onInsertHistorySuccess(History history) {
-        lastId = history.getId() + 1;
-        service.shouldSendNotification(history);
+    public void onInsertHistorySuccess(ActivityDao dao) {
+        service.shouldSendNotification(dao);
     }
 
 }

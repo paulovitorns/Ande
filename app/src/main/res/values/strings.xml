@@ -55,4 +55,9 @@
     <string name="local_msg_first_line">Registramos uma caminhada de</string>
     <string name="local_msg_second_line">{steps} passo(s) em {time}</string>
 
+    <!--history strings-->
+    <string name="history_description" formatted="false">%A, %d de %b %Y</string>
+    <string name="history_description_steps" formatted="false">%d passo(s) até o momento</string>
+    <string name="history_description_steps_finished" formatted="false">%d passos dados</string>
+
 </resources>
