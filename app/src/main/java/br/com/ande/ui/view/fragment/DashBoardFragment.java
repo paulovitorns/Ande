@@ -9,6 +9,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -43,6 +45,7 @@ public class DashBoardFragment extends Fragment implements AndeDashView {
     @Bind(R.id.imgProfile)      CircleImageView imageView;
     @Bind(R.id.imgIconAction)   ImageView       imgIconAction;
     @Bind(R.id.containerLast)   LinearLayout    containerLast;
+    @Bind(R.id.containerActual) LinearLayout    containerActual;
 
     private int     targetW;
     private int     targetH;
@@ -159,13 +162,22 @@ public class DashBoardFragment extends Fragment implements AndeDashView {
 
     @Override
     public void loadLastHistory(Walk walk, int steps) {
+
+        Animation animation = AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in);
+        Animation secondAnimation = AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in);
+
         if(walk == null){
             containerLast.setVisibility(View.GONE);
+            containerActual.startAnimation(secondAnimation);
         }else{
             containerLast.setVisibility(View.VISIBLE);
             txLastSteps.setText(String.valueOf(walk.getSteps()));
             txActualSteps.setText(String.valueOf(steps));
+
+            containerActual.startAnimation(secondAnimation);
+            containerLast.startAnimation(animation);
         }
+
     }
 
     @Override
