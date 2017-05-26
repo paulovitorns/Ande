@@ -1,7 +1,7 @@
 package br.com.ande.business.service;
 
 import br.com.ande.common.StepCountListener;
-import br.com.ande.sqlLite.entity.History;
+import br.com.ande.dao.ActivityDao;
 
 /**
  * © Copyright 2017 Ande.
@@ -12,26 +12,15 @@ import br.com.ande.sqlLite.entity.History;
 public interface HistoriesService {
 
     /**
-     * initCountHistories method
-     * <p>
-     *     Method used to get last history id
-     * </p>
-     */
-    int initCountHistories();
-
-    /**
      * saveHistory method
      * <p>
      *     Method used to save hisories into local database
      * </p>
      *
-     * @param       listener listener para retornar a confirmação do salvament
-     * @param       lastId inteiro com o último id no banco
-     * @param       steps inteiro com a quantidade de passos da historia
-     * @param       initialTimeStamp long com o timestamp do início da caminhada
-     * @param       finalTimeStamp long com o timestamp do final da caminhada
+     * @param       listener    listener para retornar a confirmação do salvament
+     * @param       dao         objeto da última atividade do usuário
      */
-    void saveHistory(StepCountListener listener, int lastId, int steps, long initialTimeStamp, long finalTimeStamp);
+    void saveHistory(StepCountListener listener, ActivityDao dao);
 
     /**
      * shouldSendNotification method
@@ -40,9 +29,9 @@ public interface HistoriesService {
      *     notificação ao usuário.
      * </p>
      *
-     * @param       history história a ser validada
+     * @param       dao atividade a ser validada
      */
-    void shouldSendNotification(History history);
+    void shouldSendNotification(ActivityDao dao);
 
     /**
      * showCurrentWalkInfos method
@@ -50,8 +39,8 @@ public interface HistoriesService {
      *     Method used to send a local notification with last walk data resumed
      * </p>
      *
-     * @param       history história a ser validada
+     * @param       dao atividade a ser validada
      */
-    void startLocalNotification(History history);
+    void startLocalNotification(ActivityDao dao);
 
 }

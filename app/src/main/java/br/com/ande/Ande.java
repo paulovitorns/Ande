@@ -2,20 +2,18 @@ package br.com.ande;
 
 import android.content.Context;
 import android.support.multidex.MultiDex;
-import android.support.multidex.MultiDexApplication;
 
-import br.com.ande.sqlLite.controller.ControllerBD;
-
+import com.orm.SugarApp;
+import com.orm.SugarContext;
 /**
  * © Copyright 2017 Ande.
  * Autor : Paulo Sales - dev@paulovns.com.br
  * Empresa : Ande app.
  */
 
-public class Ande extends MultiDexApplication {
+public class Ande extends SugarApp {
 
     private static Context context;
-    private static ControllerBD controllerBD;
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
@@ -27,7 +25,7 @@ public class Ande extends MultiDexApplication {
         super.onCreate();
 
         context         = getApplicationContext();
-        controllerBD    = new ControllerBD(context);
+        SugarContext.init(context);
     }
 
     public static Context getContext() {
@@ -36,10 +34,6 @@ public class Ande extends MultiDexApplication {
 
     public static void setContext(Context context) {
         Ande.context = context;
-    }
-
-    public static ControllerBD getControllerBD() {
-        return controllerBD;
     }
 
 }

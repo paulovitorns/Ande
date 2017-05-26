@@ -1,31 +1,21 @@
 package br.com.ande.ui.view.fragment;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 import br.com.ande.R;
 import br.com.ande.model.User;
-import br.com.ande.sqlLite.entity.History;
+import br.com.ande.model.Walk;
 import br.com.ande.ui.presenter.AndeDashPresenter;
 import br.com.ande.ui.presenter.impl.AndeDashPresenterImpl;
 import br.com.ande.ui.view.AndeDashView;
@@ -168,12 +158,13 @@ public class DashBoardFragment extends Fragment implements AndeDashView {
     }
 
     @Override
-    public void loadLastHistory(History history) {
-        if(history == null){
+    public void loadLastHistory(Walk walk, int steps) {
+        if(walk == null){
             containerLast.setVisibility(View.GONE);
         }else{
             containerLast.setVisibility(View.VISIBLE);
-            txLastSteps.setText(String.valueOf(history.getSteps()));
+            txLastSteps.setText(String.valueOf(walk.getSteps()));
+            txActualSteps.setText(String.valueOf(steps));
         }
     }
 

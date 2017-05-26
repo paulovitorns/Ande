@@ -9,15 +9,14 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
 import java.util.HashMap;
-import java.util.List;
 
 import br.com.ande.Ande;
 import br.com.ande.R;
 import br.com.ande.business.service.HistoriesService;
 import br.com.ande.business.service.SessionManagerService;
+import br.com.ande.dao.ActivityDao;
 import br.com.ande.model.Session;
 import br.com.ande.common.StepCountListener;
-import br.com.ande.sqlLite.entity.History;
 import br.com.ande.ui.view.activity.DashBoardActivity;
 import br.com.ande.util.DateUtils;
 
@@ -30,57 +29,33 @@ import br.com.ande.util.DateUtils;
 public class HistoriesServiceImpl implements HistoriesService {
 
     @Override
-    public int initCountHistories() {
-
-        List<History> histories = Ande.getControllerBD().getHistories();
-
-        int historyLastId = 1;
-
-        if(histories.size() > 0) {
-            History history = histories.get(histories.size() - 1);
-            historyLastId = history.getId() + 1;
-        }
-
-        return historyLastId;
-    }
-
-    @Override
-    public void saveHistory(StepCountListener listener, int lastId, int steps, long initialTimeStamp, long finalTimeStamp) {
-
-        History history = new History();
-
-        history.setId(lastId);
-        history.setSteps(steps);
-        history.setStartTime(String.valueOf(initialTimeStamp));
-        history.setFinishTime(String.valueOf(finalTimeStamp));
+    public void saveHistory(StepCountListener listener, ActivityDao dao) {
 
         HashMap<DateUtils.DATE_DIFFERENCE, Object> data = DateUtils.printDifference(
-                DateUtils.getDateFromTimestamp(initialTimeStamp),
-                DateUtils.getDateFromTimestamp(finalTimeStamp)
+                DateUtils.getDateFromTimestamp(dao.getStartTime()),
+                DateUtils.getDateFromTimestamp(dao.getFinishTime())
         );
 
-        history.setDurationTime(String.valueOf(data.get(DateUtils.DATE_DIFFERENCE.STRING)));
+        dao.setDurationTime(String.valueOf(data.get(DateUtils.DATE_DIFFERENCE.STRING)));
+        dao.save();
 
-        if(Ande.getControllerBD().insereDados(history)){
-            listener.onInsertHistorySuccess(history);
-        }
-
+        listener.onInsertHistorySuccess(dao);
     }
 
     @Override
-    public void shouldSendNotification(History history) {
+    public void shouldSendNotification(ActivityDao dao) {
 
         HashMap<DateUtils.DATE_DIFFERENCE, Object> data = DateUtils.printDifference(
-                DateUtils.getDateFromTimestamp(Long.parseLong(history.getStartTime())),
-                DateUtils.getDateFromTimestamp(Long.parseLong(history.getFinishTime()))
+                DateUtils.getDateFromTimestamp(dao.getStartTime()),
+                DateUtils.getDateFromTimestamp(dao.getFinishTime())
         );
 
         if(Long.parseLong(String.valueOf(data.get(DateUtils.DATE_DIFFERENCE.MINUTES))) >= Ande.getContext().getResources().getInteger(R.integer.min_walked_time_to_send_notification))
-            startLocalNotification(history);
+            startLocalNotification(dao);
     }
 
     @Override
-    public void startLocalNotification(History history) {
+    public void startLocalNotification(ActivityDao dao) {
 
         Context context = Ande.getContext();
 
@@ -96,31 +71,24 @@ public class HistoriesServiceImpl implements HistoriesService {
         String msgFull = context.getString(R.string.local_msg);
         String msg = context.getString(R.string.local_msg_second_line);
 
-        msgFull = msgFull.replace("{steps}", String.valueOf(history.getSteps()));
-        msgFull = msgFull.replace("{time}", history.getDurationTime());
+        msgFull = msgFull.replace("{steps}", String.valueOf(dao.getSteps()));
+        msgFull = msgFull.replace("{time}", dao.getDurationTime());
 
-        msg = msg.replace("{steps}", String.valueOf(history.getSteps()));
-        msg = msg.replace("{time}", history.getDurationTime());
+        msg = msg.replace("{steps}", String.valueOf(dao.getSteps()));
+        msg = msg.replace("{time}", dao.getDurationTime());
 
-        NotificationCompat.Builder mBuilder = null;
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+                .setSmallIcon(R.drawable.ic_walk_finished)
+                .setAutoCancel(true)
+                .setContentTitle(title)
+                .setTicker(title)
+                .setContentText(msgFull)
+                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            mBuilder = new NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.ic_walk_finished)
-                    .setAutoCancel(true)
-                    .setContentTitle(title)
-                    .setTicker(title)
-                    .setColor(context.getColor(R.color.colorPrimaryDark))
-                    .setContentText(msgFull)
-                    .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
+            mBuilder.setColor(context.getColor(R.color.colorPrimaryDark));
         }else{
-            mBuilder = new NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.ic_walk_finished)
-                    .setAutoCancel(true)
-                    .setContentTitle(title)
-                    .setTicker(title)
-                    .setColor(context.getResources().getColor(R.color.colorPrimaryDark))
-                    .setContentText(msgFull)
-                    .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
+            mBuilder.setColor(context.getResources().getColor(R.color.colorPrimaryDark));
         }
 
         // Add Big View Specific Configuration
@@ -156,7 +124,7 @@ public class HistoriesServiceImpl implements HistoriesService {
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         // mId allows you to update the notification later on.
-        mNotificationManager.notify(history.getId(), mBuilder.build());
+        mNotificationManager.notify(Integer.parseInt(String.valueOf(dao.getItemId())), mBuilder.build());
 
     }
 
