@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="wait_delay_for_next_step">10000</integer>
-    <integer name="min_walked_time_to_send_notification">2</integer>
+    <integer name="min_walked_time_to_send_notification">1</integer>
 </resources>

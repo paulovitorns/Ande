@@ -17,18 +17,10 @@
         android:padding="@dimen/margin_default"
         android:background="@color/colorPrimaryDark">
 
-        <TextView
-            android:id="@+id/txDateDesc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="@dimen/font_title"/>
-
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_extra">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/txPassos"
@@ -39,12 +31,35 @@
                 android:textColor="@color/white"/>
 
             <TextView
-                android:id="@+id/txStepDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_small"
                 android:text="@string/walk_actual_steps"
                 android:textSize="@dimen/font_big"
+                android:textColor="@color/white"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/margin_extra"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/duration_of_walk"
+                android:textSize="@dimen/font_big"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:id="@+id/txTempo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:text="@string/initial_duration_mark"
+                android:textSize="@dimen/font_large"
                 android:textColor="@color/white"/>
 
         </LinearLayout>

@@ -23,7 +23,6 @@ import br.com.ande.common.StepCountListener;
 import br.com.ande.dao.ActivityDao;
 import br.com.ande.dao.HistoryDao;
 import br.com.ande.service.StepCountService;
-import br.com.ande.sqlLite.entity.History;
 import br.com.ande.util.DateUtils;
 
 /**
@@ -168,11 +167,22 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
             return;
         }
 
-        if(historyDao.date.before(DateUtils.toDate(DateUtils.getCurrentDate()))){
+        if(DateUtils.isCurrentDay(historyDao.getDate())) {
             this.createHistory();
-        }else{
-            tSteps = historyDao.steps;
+        }else {
+            tSteps = HistoryDao.countSteps(historyDao);
         }
+    }
+
+    @Override
+    public void verifyHasDayChangedBeforeSave() {
+        if(historyDao == null){
+            this.loadLastHistoryBeforeSave();
+            return;
+        }
+
+        if(DateUtils.isCurrentDay(historyDao.getDate()))
+            this.createHistory();
     }
 
     @Override
@@ -185,11 +195,20 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
 
     @Override
     public void loadLastHistory() {
-        historyDao  = HistoryDao.findById(HistoryDao.class, HistoryDao.lastId());
+        historyDao  = HistoryDao.lastHistory();
         if(historyDao == null)
             historyDao = new HistoryDao(HistoryDao.nextId(), DateUtils.toDate(DateUtils.getCurrentDate()), tSteps);
 
         this.verifyHasDayChanged();
+    }
+
+    @Override
+    public void loadLastHistoryBeforeSave() {
+        historyDao  = HistoryDao.lastHistory();
+        if(historyDao == null)
+            historyDao = new HistoryDao(HistoryDao.nextId(), DateUtils.toDate(DateUtils.getCurrentDate()), tSteps);
+
+        this.verifyHasDayChangedBeforeSave();
     }
 
     @Override
@@ -228,9 +247,9 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
     @Override
     public void pushNewHistory() {
 
-        this.verifyHasDayChanged();
+        this.verifyHasDayChangedBeforeSave();
 
-        historyDao.steps = tSteps;
+        historyDao.setSteps(tSteps);
         historyDao.save();
 
         ActivityDao activityDao = new ActivityDao(

@@ -1,9 +1,14 @@
 package br.com.ande.model;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 import br.com.ande.Ande;
 import br.com.ande.R;
+import br.com.ande.dao.HistoryDao;
 import br.com.ande.util.DateUtils;
 
 /**
@@ -13,6 +18,11 @@ import br.com.ande.util.DateUtils;
  */
 
 public class History {
+
+    /**
+     * reference of HistoryDao
+     */
+    private long id;
 
     /**
      * show some text like "segunda-feira, 20 de abr 2017"
@@ -35,23 +45,72 @@ public class History {
     private boolean isCurrentDay;
 
     //TODO:: pass param type HistoryDAO
-    public History() {
-        String description = Ande.getContext().getString(R.string.history_description);
+    public History(HistoryDao dao) {
 
-        this.descriptionHistory = String.format(description, new Date());
-        this.setDecriptionOfSteps(new Date());
-        this.steps              = steps;
+        this.setDecriptionOfSteps(dao.getDate());
+        this.setDescriptionHistoryText(dao.getDate());
 
-        this.descriptionSteps = String.format(this.descriptionSteps, this.steps);
+        this.steps  = dao.getSteps();
+        this.id     = dao.getItemId();
     }
 
     private void setDecriptionOfSteps(Date date){
 
-        if(DateUtils.isCurrentDay(date))
+        if(date.equals(DateUtils.toDate(DateUtils.getCurrentDate()))) {
             this.descriptionSteps = Ande.getContext().getString(R.string.history_description_steps);
+            isCurrentDay = true;
+        }else {
+            this.descriptionSteps = Ande.getContext().getString(R.string.history_description_steps_finished);
+            isCurrentDay = false;
+        }
+    }
+
+    private void setDescriptionHistoryText(Date date){
+
+        String description;
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+
+        if(isCurrentDay)
+            description = Ande.getContext().getString(R.string.history_description_today);
         else
-            this.descriptionSteps   = Ande.getContext().getString(R.string.history_description_steps_finished);
+            description = Ande.getContext().getString(R.string.history_description);
+
+        this.descriptionHistory = String.format(description, calendar);
 
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public String getDescriptionHistory() {
+        return descriptionHistory;
+    }
+
+    public String getDescriptionSteps() {
+        return descriptionSteps;
+    }
+
+    public int getSteps() {
+        return steps;
+    }
+
+    public boolean isCurrentDay() {
+        return isCurrentDay;
+    }
+
+    public static List<History> histories(){
+        List<History> histories = new ArrayList<>();
+
+        List<HistoryDao> daos = HistoryDao.listAll(HistoryDao.class);
+
+        if(daos.size() > 0){
+            for(HistoryDao dao : daos){
+                histories.add(new History(dao));
+            }
+        }
+
+        return histories;
+    }
 }

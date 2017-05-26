@@ -3,7 +3,7 @@ package br.com.ande.ui.presenter.impl;
 import java.util.List;
 
 import br.com.ande.Ande;
-import br.com.ande.sqlLite.entity.History;
+import br.com.ande.model.History;
 import br.com.ande.ui.adapter.HistoryAdapter;
 import br.com.ande.ui.presenter.HistoryPresenter;
 import br.com.ande.ui.view.HistoryView;
@@ -27,7 +27,7 @@ public class HistoryPresenterImpl implements HistoryPresenter {
     public void init() {
         this.view.showLoading();
 
-        List<History> histoties = Ande.getControllerBD().getHistories();
+        List<History> histoties = History.histories();
 
         if(histoties.size() > 0){
             this.view.loadAdapter();
@@ -40,12 +40,8 @@ public class HistoryPresenterImpl implements HistoryPresenter {
     }
 
     @Override
-    public void tryAgain() {
-
-    }
+    public void tryAgain() {}
 
     @Override
-    public void goBack() {
-
-    }
+    public void goBack() {}
 }

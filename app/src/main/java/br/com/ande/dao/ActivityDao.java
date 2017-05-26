@@ -1,6 +1,9 @@
 package br.com.ande.dao;
 
 import com.orm.SugarRecord;
+import com.orm.dsl.Unique;
+
+import java.util.List;
 
 /**
  * © Copyright 2017 Ande.
@@ -8,15 +11,16 @@ import com.orm.SugarRecord;
  * Empresa : Ande app.
  */
 
-public class ActivityDao extends SugarRecord<ActivityDao>{
+public class ActivityDao extends SugarRecord {
 
-    public long        id;
-    public int         steps;
-    public long        startTime;
-    public long        finishTime;
-    public String      durationTime;
-    public double      lat;
-    public double      lng;
+    @Unique
+    long        id;
+    int         steps;
+    long        startTime;
+    long        finishTime;
+    String      durationTime;
+    double      lat;
+    double      lng;
 
     /**
      * Define a relationship with HistoryDao
@@ -38,11 +42,85 @@ public class ActivityDao extends SugarRecord<ActivityDao>{
         this.history        = history;
     }
 
-    public static long nextId(){
-        ActivityDao dao = ActivityDao.findWithQuery(ActivityDao.class, "SELECT * FROM ActivityDao ORDER BY id DESC LIMIT 1").get(0);
-        if(dao == null)
-            return 1;
+    public static ActivityDao lastActivity(){
+        List<ActivityDao> daos = ActivityDao.listAll(ActivityDao.class);
+
+        if(daos.size() > 0)
+            return daos.get(daos.size()-1);
         else
-            return dao.id+1;
+            return null;
+    }
+
+    public static long nextId(){
+        List<ActivityDao> daos = ActivityDao.listAll(ActivityDao.class);
+
+        if(daos.size() > 0)
+            return daos.get(daos.size()-1).getItemId()+1;
+        else
+            return 1;
+    }
+
+    public long getItemId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public int getSteps() {
+        return steps;
+    }
+
+    public void setSteps(int steps) {
+        this.steps = steps;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    public long getFinishTime() {
+        return finishTime;
+    }
+
+    public void setFinishTime(long finishTime) {
+        this.finishTime = finishTime;
+    }
+
+    public String getDurationTime() {
+        return durationTime;
+    }
+
+    public void setDurationTime(String durationTime) {
+        this.durationTime = durationTime;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLng() {
+        return lng;
+    }
+
+    public void setLng(double lng) {
+        this.lng = lng;
+    }
+
+    public HistoryDao getHistory() {
+        return history;
+    }
+
+    public void setHistory(HistoryDao history) {
+        this.history = history;
     }
 }
