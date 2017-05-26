@@ -1,7 +1,6 @@
 package br.com.ande.ui.view.fragment;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,9 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import br.com.ande.Ande;
 import br.com.ande.R;
-import br.com.ande.ui.adapter.HistoryAdapter;
 import br.com.ande.ui.presenter.HistoryPresenter;
 import br.com.ande.ui.presenter.impl.HistoryPresenterImpl;
 import br.com.ande.ui.view.DashBoardView;
