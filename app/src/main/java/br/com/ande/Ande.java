@@ -5,9 +5,6 @@ import android.support.multidex.MultiDex;
 
 import com.orm.SugarApp;
 import com.orm.SugarContext;
-
-import br.com.ande.sqlLite.controller.ControllerBD;
-
 /**
  * © Copyright 2017 Ande.
  * Autor : Paulo Sales - dev@paulovns.com.br
@@ -17,7 +14,6 @@ import br.com.ande.sqlLite.controller.ControllerBD;
 public class Ande extends SugarApp {
 
     private static Context context;
-    private static ControllerBD controllerBD;
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
@@ -30,8 +26,6 @@ public class Ande extends SugarApp {
 
         context         = getApplicationContext();
         SugarContext.init(context);
-        //TODO:: remove old ORM from application
-//        controllerBD    = new ControllerBD(context);
     }
 
     public static Context getContext() {
@@ -40,10 +34,6 @@ public class Ande extends SugarApp {
 
     public static void setContext(Context context) {
         Ande.context = context;
-    }
-
-    public static ControllerBD getControllerBD() {
-        return controllerBD;
     }
 
 }
