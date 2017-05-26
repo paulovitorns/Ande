@@ -12,14 +12,6 @@ import br.com.ande.dao.ActivityDao;
 public interface HistoriesService {
 
     /**
-     * initCountHistories method
-     * <p>
-     *     Method used to get last history id
-     * </p>
-     */
-    int initCountHistories();
-
-    /**
      * saveHistory method
      * <p>
      *     Method used to save hisories into local database

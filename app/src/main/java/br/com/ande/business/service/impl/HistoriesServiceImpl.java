@@ -9,7 +9,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
 import java.util.HashMap;
-import java.util.List;
 
 import br.com.ande.Ande;
 import br.com.ande.R;
@@ -18,7 +17,6 @@ import br.com.ande.business.service.SessionManagerService;
 import br.com.ande.dao.ActivityDao;
 import br.com.ande.model.Session;
 import br.com.ande.common.StepCountListener;
-import br.com.ande.sqlLite.entity.History;
 import br.com.ande.ui.view.activity.DashBoardActivity;
 import br.com.ande.util.DateUtils;
 
@@ -29,21 +27,6 @@ import br.com.ande.util.DateUtils;
  */
 
 public class HistoriesServiceImpl implements HistoriesService {
-
-    @Override
-    public int initCountHistories() {
-
-        List<History> histories = Ande.getControllerBD().getHistories();
-
-        int historyLastId = 1;
-
-        if(histories.size() > 0) {
-            History history = histories.get(histories.size() - 1);
-            historyLastId = history.getId() + 1;
-        }
-
-        return historyLastId;
-    }
 
     @Override
     public void saveHistory(StepCountListener listener, ActivityDao dao) {
