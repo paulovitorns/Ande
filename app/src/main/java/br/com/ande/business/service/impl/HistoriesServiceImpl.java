@@ -49,23 +49,22 @@ public class HistoriesServiceImpl implements HistoriesService {
     public void saveHistory(StepCountListener listener, ActivityDao dao) {
 
         HashMap<DateUtils.DATE_DIFFERENCE, Object> data = DateUtils.printDifference(
-                DateUtils.getDateFromTimestamp(dao.startTime),
-                DateUtils.getDateFromTimestamp(dao.finishTime)
+                DateUtils.getDateFromTimestamp(dao.getStartTime()),
+                DateUtils.getDateFromTimestamp(dao.getFinishTime())
         );
 
-        dao.durationTime = String.valueOf(data.get(DateUtils.DATE_DIFFERENCE.STRING));
-
+        dao.setDurationTime(String.valueOf(data.get(DateUtils.DATE_DIFFERENCE.STRING)));
         dao.save();
-        listener.onInsertHistorySuccess(dao);
 
+        listener.onInsertHistorySuccess(dao);
     }
 
     @Override
     public void shouldSendNotification(ActivityDao dao) {
 
         HashMap<DateUtils.DATE_DIFFERENCE, Object> data = DateUtils.printDifference(
-                DateUtils.getDateFromTimestamp(dao.startTime),
-                DateUtils.getDateFromTimestamp(dao.finishTime)
+                DateUtils.getDateFromTimestamp(dao.getStartTime()),
+                DateUtils.getDateFromTimestamp(dao.getFinishTime())
         );
 
         if(Long.parseLong(String.valueOf(data.get(DateUtils.DATE_DIFFERENCE.MINUTES))) >= Ande.getContext().getResources().getInteger(R.integer.min_walked_time_to_send_notification))
@@ -89,11 +88,11 @@ public class HistoriesServiceImpl implements HistoriesService {
         String msgFull = context.getString(R.string.local_msg);
         String msg = context.getString(R.string.local_msg_second_line);
 
-        msgFull = msgFull.replace("{steps}", String.valueOf(dao.steps));
-        msgFull = msgFull.replace("{time}", dao.durationTime);
+        msgFull = msgFull.replace("{steps}", String.valueOf(dao.getSteps()));
+        msgFull = msgFull.replace("{time}", dao.getDurationTime());
 
-        msg = msg.replace("{steps}", String.valueOf(dao.steps));
-        msg = msg.replace("{time}", dao.durationTime);
+        msg = msg.replace("{steps}", String.valueOf(dao.getSteps()));
+        msg = msg.replace("{time}", dao.getDurationTime());
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_walk_finished)
@@ -142,7 +141,7 @@ public class HistoriesServiceImpl implements HistoriesService {
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         // mId allows you to update the notification later on.
-        mNotificationManager.notify(Integer.parseInt(String.valueOf(dao.id)), mBuilder.build());
+        mNotificationManager.notify(Integer.parseInt(String.valueOf(dao.getItemId())), mBuilder.build());
 
     }
 

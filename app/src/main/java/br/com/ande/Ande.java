@@ -2,7 +2,9 @@ package br.com.ande;
 
 import android.content.Context;
 import android.support.multidex.MultiDex;
-import android.support.multidex.MultiDexApplication;
+
+import com.orm.SugarApp;
+import com.orm.SugarContext;
 
 import br.com.ande.sqlLite.controller.ControllerBD;
 
@@ -12,7 +14,7 @@ import br.com.ande.sqlLite.controller.ControllerBD;
  * Empresa : Ande app.
  */
 
-public class Ande extends MultiDexApplication {
+public class Ande extends SugarApp {
 
     private static Context context;
     private static ControllerBD controllerBD;
@@ -27,6 +29,7 @@ public class Ande extends MultiDexApplication {
         super.onCreate();
 
         context         = getApplicationContext();
+        SugarContext.init(context);
         //TODO:: remove old ORM from application
 //        controllerBD    = new ControllerBD(context);
     }

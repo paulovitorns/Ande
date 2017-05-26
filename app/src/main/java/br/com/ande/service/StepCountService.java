@@ -17,12 +17,28 @@ public interface StepCountService {
     void verifyHasDayChanged();
 
     /**
+     * verifyHasDayChangedBeforeSave method
+     * <p>
+     *     Method used to verify if day has change before save new activity
+     * </p>
+     */
+    void verifyHasDayChangedBeforeSave();
+
+    /**
      * loadLastHistory method
      * <p>
      *     Method used to load last History
      * </p>
      */
     void loadLastHistory();
+
+    /**
+     * loadLastHistoryBeforeSave method
+     * <p>
+     *     Method used to load last History before save new activity
+     * </p>
+     */
+    void loadLastHistoryBeforeSave();
 
     /**
      * createHistory method

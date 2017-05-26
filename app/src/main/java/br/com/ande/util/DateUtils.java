@@ -79,7 +79,7 @@ public class DateUtils {
     }
 
     public static Date toDate(String data) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         Date date = null;
         try {
             date = sdf.parse(data);
@@ -91,13 +91,13 @@ public class DateUtils {
 
     public static String getCurrentDate(){
         Calendar c          = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 
         return df.format(c.getTime());
     }
 
     public static boolean isCurrentDay(Date date){
-        return DateUtils.getCurrentDate().equals(date);
+        return date.before(DateUtils.toDate(DateUtils.getCurrentDate()));
     }
 
     public static String dateToQueryString(Date date){

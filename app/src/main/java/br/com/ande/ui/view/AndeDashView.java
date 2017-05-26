@@ -1,7 +1,7 @@
 package br.com.ande.ui.view;
 
 import br.com.ande.model.User;
-import br.com.ande.sqlLite.entity.History;
+import br.com.ande.model.Walk;
 
 /**
  * © Copyright 2017 Ande.
@@ -15,7 +15,7 @@ public interface AndeDashView extends BaseView {
 
     void setPic();
 
-    void loadLastHistory(History history);
+    void loadLastHistory(Walk walk, int steps);
 
     void updateCountHistories(int histories);
 

@@ -2,14 +2,13 @@ package br.com.ande.ui.presenter.impl;
 
 import java.util.List;
 
-import br.com.ande.Ande;
 import br.com.ande.business.service.SessionManagerService;
 import br.com.ande.business.service.impl.SessionManagerServiceImpl;
+import br.com.ande.model.History;
 import br.com.ande.model.Session;
-import br.com.ande.sqlLite.entity.History;
+import br.com.ande.model.Walk;
 import br.com.ande.ui.presenter.AndeDashPresenter;
 import br.com.ande.ui.view.AndeDashView;
-import br.com.ande.util.DateUtils;
 
 /**
  * © Copyright 2017 Ande.
@@ -37,13 +36,15 @@ public class AndeDashPresenterImpl implements AndeDashPresenter {
             this.view.showInfoUser(session.getUser());
         }
 
-        List<History> histoties = Ande.getControllerBD().getHistories();
+        List<History> histories = History.histories();
 
-        if(histoties.size() > 0) {
-            this.view.loadLastHistory(histoties.get(histoties.size() - 1));
-            this.view.updateCountHistories(histoties.size());
+        if(histories.size() > 0) {
+            List<Walk> walks = Walk.getWalksFromHistory(histories.get(histories.size() - 1));
+
+            this.view.loadLastHistory(walks.get(walks.size() - 1), histories.get(histories.size()-1).getSteps());
+            this.view.updateCountHistories(histories.size());
         }else {
-            this.view.loadLastHistory(null);
+            this.view.loadLastHistory(null, 0);
             this.view.setNullCountHistories();
         }
 
@@ -66,13 +67,15 @@ public class AndeDashPresenterImpl implements AndeDashPresenter {
     @Override
     public void updateLastHistory() {
 
-        List<History> histories = Ande.getControllerBD().getHistories();
+        List<History> histories = History.histories();
 
         if(histories.size() > 0) {
-            this.view.loadLastHistory(histories.get(histories.size() - 1));
+            List<Walk> walks = Walk.getWalksFromHistory(histories.get(histories.size() - 1));
+
+            this.view.loadLastHistory(walks.get(walks.size() - 1), histories.get(histories.size()-1).getSteps());
             this.view.updateCountHistories(histories.size());
         }else {
-            this.view.loadLastHistory(null);
+            this.view.loadLastHistory(null, 0);
         }
     }
 }

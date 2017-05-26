@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import br.com.ande.R;
-import br.com.ande.sqlLite.entity.History;
+import br.com.ande.model.History;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -45,8 +45,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         History history = historyList.get(position);
 
         if(history != null){
-            holder.steps.setText(String.valueOf(history.getSteps()));
-            holder.duration.setText(history.getDurationTime());
+            holder.dateDesc.setText(history.getDescriptionHistory());
+            holder.passos.setText(String.valueOf(history.getSteps()));
+            holder.stepDescription.setText(history.getDescriptionSteps());
         }
 
     }
@@ -58,8 +59,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
-        @Bind(R.id.txPassos) TextView steps;
-        @Bind(R.id.txTempo)  TextView duration;
+        @Bind(R.id.txDateDesc)          TextView dateDesc;
+        @Bind(R.id.txPassos)            TextView passos;
+        @Bind(R.id.txStepDescription)   TextView stepDescription;
 
         public ViewHolder(View itemView) {
             super(itemView);
