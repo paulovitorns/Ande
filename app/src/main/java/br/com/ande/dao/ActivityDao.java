@@ -19,8 +19,8 @@ public class ActivityDao extends SugarRecord {
     long        startTime;
     long        finishTime;
     String      durationTime;
-    double      lat;
-    double      lng;
+    double      distance;
+    int         lostKal;
 
     /**
      * Define a relationship with HistoryDao
@@ -30,15 +30,14 @@ public class ActivityDao extends SugarRecord {
     public ActivityDao() {
     }
 
-    public ActivityDao(long id, int steps, long startTime, long finishTime, String durationTime, double lat, double lng, HistoryDao history) {
+    public ActivityDao(int steps, long startTime, long finishTime, String durationTime, double distance, HistoryDao history) {
 
-        this.id             = id;
+        this.id             = nextId();
         this.steps          = steps;
         this.startTime      = startTime;
         this.finishTime     = finishTime;
         this.durationTime   = durationTime;
-        this.lat            = lat;
-        this.lng            = lng;
+        this.distance       = distance;
         this.history        = history;
     }
 
@@ -51,7 +50,7 @@ public class ActivityDao extends SugarRecord {
             return null;
     }
 
-    public static long nextId(){
+    private long nextId(){
         List<ActivityDao> daos = ActivityDao.listAll(ActivityDao.class);
 
         if(daos.size() > 0)
@@ -100,20 +99,20 @@ public class ActivityDao extends SugarRecord {
         this.durationTime = durationTime;
     }
 
-    public double getLat() {
-        return lat;
+    public double getDistance() {
+        return distance;
     }
 
-    public void setLat(double lat) {
-        this.lat = lat;
+    public void setDistance(double distance) {
+        this.distance = distance;
     }
 
-    public double getLng() {
-        return lng;
+    public int getLostKal() {
+        return lostKal;
     }
 
-    public void setLng(double lng) {
-        this.lng = lng;
+    public void setLostKal(int lostKal) {
+        this.lostKal = lostKal;
     }
 
     public HistoryDao getHistory() {

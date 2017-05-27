@@ -46,6 +46,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
         if(history != null){
             holder.dateDesc.setText(history.getDescriptionHistory());
+            holder.distanceDesc.setText(history.getDescriptionDistance());
             holder.passos.setText(String.valueOf(history.getSteps()));
             holder.stepDescription.setText(history.getDescriptionSteps());
         }
@@ -60,6 +61,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
         @Bind(R.id.txDateDesc)          TextView dateDesc;
+        @Bind(R.id.txDistanceDesc)      TextView distanceDesc;
         @Bind(R.id.txPassos)            TextView passos;
         @Bind(R.id.txStepDescription)   TextView stepDescription;
 

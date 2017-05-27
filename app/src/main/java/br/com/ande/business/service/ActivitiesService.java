@@ -2,6 +2,7 @@ package br.com.ande.business.service;
 
 import br.com.ande.common.StepCountListener;
 import br.com.ande.dao.ActivityDao;
+import br.com.ande.dao.LocationDao;
 
 /**
  * © Copyright 2017 Ande.
@@ -9,10 +10,10 @@ import br.com.ande.dao.ActivityDao;
  * Empresa : Ande app.
  */
 
-public interface HistoriesService {
+public interface ActivitiesService {
 
     /**
-     * saveHistory method
+     * saveActivity method
      * <p>
      *     Method used to save hisories into local database
      * </p>
@@ -20,7 +21,7 @@ public interface HistoriesService {
      * @param       listener    listener para retornar a confirmação do salvament
      * @param       dao         objeto da última atividade do usuário
      */
-    void saveHistory(StepCountListener listener, ActivityDao dao);
+    void saveActivity(StepCountListener listener, ActivityDao dao, LocationDao locationDao);
 
     /**
      * shouldSendNotification method

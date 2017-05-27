@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 
 import br.com.ande.Ande;
 import br.com.ande.R;
 import br.com.ande.dao.HistoryDao;
 import br.com.ande.util.DateUtils;
+import br.com.ande.util.Utils;
 
 /**
  * © Copyright 2017 Ande.
@@ -40,16 +42,20 @@ public class History {
     private int     steps;
 
     /**
+     * show some text like "1,5km"
+     */
+    private String  descriptionDistance;
+
+    /**
      * Verify if is current day
      */
     private boolean isCurrentDay;
 
-    //TODO:: pass param type HistoryDAO
     public History(HistoryDao dao) {
 
         this.setDecriptionOfSteps(dao.getDate());
         this.setDescriptionHistoryText(dao.getDate());
-
+        this.setDescritionOfDistance(dao);
         this.steps  = dao.getSteps();
         this.id     = dao.getItemId();
     }
@@ -80,6 +86,14 @@ public class History {
 
     }
 
+    private void setDescritionOfDistance(HistoryDao dao){
+        HashMap<HistoryDao.METRIC, Object> metrics = HistoryDao.getHistoryMetrics(dao);
+
+        double distance = Utils.getDistanceInKM(Double.parseDouble(String.valueOf(metrics.get(HistoryDao.METRIC.DISTANCE))));
+
+        this.descriptionDistance = Utils.StringToCurrency(distance);
+    }
+
     public long getId() {
         return id;
     }
@@ -94,6 +108,10 @@ public class History {
 
     public int getSteps() {
         return steps;
+    }
+
+    public String getDescriptionDistance() {
+        return descriptionDistance;
     }
 
     public boolean isCurrentDay() {

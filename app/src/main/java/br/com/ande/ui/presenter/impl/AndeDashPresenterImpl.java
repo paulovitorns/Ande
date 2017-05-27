@@ -41,7 +41,7 @@ public class AndeDashPresenterImpl implements AndeDashPresenter {
         if(histories.size() > 0) {
             List<Walk> walks = Walk.getWalksFromHistory(histories.get(histories.size() - 1));
 
-            this.view.loadLastHistory(walks.get(walks.size() - 1), histories.get(histories.size()-1).getSteps());
+            this.view.loadLastHistory(((walks.size() > 0) ? walks.get(walks.size() - 1) : null), histories.get(histories.size()-1).getSteps());
             this.view.updateCountHistories(histories.size());
         }else {
             this.view.loadLastHistory(null, 0);
