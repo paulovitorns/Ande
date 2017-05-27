@@ -4,6 +4,7 @@ import com.orm.SugarRecord;
 import com.orm.dsl.Unique;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -15,17 +16,15 @@ import java.util.List;
 public class HistoryDao extends SugarRecord {
 
     @Unique
-    long     id;
-    Date     date;
-    int      steps;
-    int      lostKal;
+    long    id;
+    Date    date;
+    int     steps;
 
     public HistoryDao() {
     }
 
-    public HistoryDao(long id, Date date, int steps) {
-
-        this.id     = id;
+    public HistoryDao(Date date, int steps) {
+        this.id     = nextId();
         this.date   = date;
         this.steps  = steps;
     }
@@ -39,7 +38,7 @@ public class HistoryDao extends SugarRecord {
             return null;
     }
 
-    public static long nextId(){
+    private long nextId(){
         List<HistoryDao> daos = HistoryDao.listAll(HistoryDao.class);
 
         if(daos.size() > 0)
@@ -48,15 +47,26 @@ public class HistoryDao extends SugarRecord {
             return 1;
     }
 
-    public static int countSteps(HistoryDao history){
+    public static HashMap<METRIC, Object> getHistoryMetrics(HistoryDao history){
+
+        HashMap<METRIC, Object> metrics = new HashMap<>();
+
         List<ActivityDao> daos = ActivityDao.find(ActivityDao.class, "history = ?", String.valueOf(history.getItemId()));
 
-        int steps = 0;
+        int     steps       = 0;
+        double  distance    = 0;
+        int     kal         = 0;
+
         for (ActivityDao activity : daos){
-            steps = steps + activity.getSteps();
+            steps       = steps     + activity.getSteps();
+            distance    = distance  + activity.getDistance();
+            kal         = kal       + activity.getLostKal();
         }
 
-        return steps;
+        metrics.put(METRIC.STEPS, steps);
+        metrics.put(METRIC.DISTANCE, distance);
+        metrics.put(METRIC.KAL, kal);
+        return metrics;
     }
 
     public long getItemId() {
@@ -83,11 +93,9 @@ public class HistoryDao extends SugarRecord {
         this.steps = steps;
     }
 
-    public int getLostKal() {
-        return lostKal;
-    }
-
-    public void setLostKal(int lostKal) {
-        this.lostKal = lostKal;
+    public static  enum METRIC{
+        DISTANCE,
+        STEPS,
+        KAL
     }
 }
