@@ -263,16 +263,20 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
     @Override
     public void pushNewHistory() {
 
-        this.verifyHasDayChangedBeforeSave();
+        if(steps > 0){
 
-        historyDao.setSteps(tSteps);
-        historyDao.save();
+            this.verifyHasDayChangedBeforeSave();
 
-        ActivityDao activityDao = new ActivityDao(
-            steps, initialTimeStamp, finalTimeStamp, null, 0, historyDao
-        );
+            historyDao.setSteps(tSteps);
+            historyDao.save();
 
-        service.saveActivity(this, activityDao, initialPosition);
+            ActivityDao activityDao = new ActivityDao(
+                    steps, initialTimeStamp, finalTimeStamp, null, 0, historyDao
+            );
+
+            service.saveActivity(this, activityDao, initialPosition);
+        }
+
         initialTimeStamp    = 0;
         finalTimeStamp      = 0;
         isLoadfirtsStep     = false;
