@@ -60,5 +60,10 @@
     <string name="history_description_today" formatted="false">hoje, %1$te de %1$tb/%1$tY</string>
     <string name="history_description_steps">passo(s) até o momento</string>
     <string name="history_description_steps_finished">passos dados</string>
+    <string name="history_distance_description" formatted="false">%d km</string>
+
+    <!--Permission's texts-->
+    <string name="permission_location_title">Podemos usar sua localização?</string>
+    <string name="permission_location_explain">Pedimos essa permissão para que possamos localizar seus pontos de partida e chegada das suas caminhadas.</string>
 
 </resources>

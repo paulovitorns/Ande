@@ -6,24 +6,28 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import br.com.ande.Ande;
 import br.com.ande.R;
-import br.com.ande.business.service.HistoriesService;
-import br.com.ande.business.service.impl.HistoriesServiceImpl;
+import br.com.ande.business.service.ActivitiesService;
+import br.com.ande.business.service.impl.ActivitiesServiceImpl;
 import br.com.ande.common.StepCountListener;
 import br.com.ande.dao.ActivityDao;
 import br.com.ande.dao.HistoryDao;
+import br.com.ande.dao.LocationDao;
 import br.com.ande.service.StepCountService;
 import br.com.ande.util.DateUtils;
+import br.com.ande.util.Utils;
 
 /**
  * © Copyright 2017 Ande.
@@ -73,7 +77,12 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
     /**
      * Service to save histories into DB
      */
-    private HistoriesService service;
+    private ActivitiesService service;
+
+    /**
+     * var used to get initial user position
+     */
+    private LocationDao initialPosition;
 
     @Override
     public void onCreate() {
@@ -81,7 +90,7 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
 
         Log.d(TAG, "step service Instantiated");
 
-        service = new HistoriesServiceImpl();
+        service = new ActivitiesServiceImpl();
 
         this.verifyHasDayChanged();
 
@@ -129,8 +138,16 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
         }else{
             if(isLoadfirtsStep){
 
-                if(initialTimeStamp == 0)
-                    initialTimeStamp = DateUtils.getCurrentTimeInMillis();
+                if(initialTimeStamp == 0) {
+                    initialTimeStamp    = DateUtils.getCurrentTimeInMillis();
+                    Location location   = Utils.getUserLocation(Ande.getContext());
+                    if(location == null){
+                        initialPosition = new LocationDao(0.0, 0.0, true, null);
+                    }else{
+                        initialPosition = new LocationDao(location.getLatitude(), location.getLongitude(), true, null);
+                    }
+
+                }
 
                 steps++;
                 tSteps++;
@@ -161,57 +178,6 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
     }
 
     @Override
-    public void verifyHasDayChanged() {
-        if(historyDao == null){
-            this.loadLastHistory();
-            return;
-        }
-
-        if(DateUtils.isCurrentDay(historyDao.getDate())) {
-            this.createHistory();
-        }else {
-            tSteps = HistoryDao.countSteps(historyDao);
-        }
-    }
-
-    @Override
-    public void verifyHasDayChangedBeforeSave() {
-        if(historyDao == null){
-            this.loadLastHistoryBeforeSave();
-            return;
-        }
-
-        if(DateUtils.isCurrentDay(historyDao.getDate()))
-            this.createHistory();
-    }
-
-    @Override
-    public void createHistory() {
-        //TODO::Implement service to save last history and create a new history
-
-        historyDao  = new HistoryDao(HistoryDao.nextId(), DateUtils.toDate(DateUtils.getCurrentDate()), 0);
-        tSteps      = 0;
-    }
-
-    @Override
-    public void loadLastHistory() {
-        historyDao  = HistoryDao.lastHistory();
-        if(historyDao == null)
-            historyDao = new HistoryDao(HistoryDao.nextId(), DateUtils.toDate(DateUtils.getCurrentDate()), tSteps);
-
-        this.verifyHasDayChanged();
-    }
-
-    @Override
-    public void loadLastHistoryBeforeSave() {
-        historyDao  = HistoryDao.lastHistory();
-        if(historyDao == null)
-            historyDao = new HistoryDao(HistoryDao.nextId(), DateUtils.toDate(DateUtils.getCurrentDate()), tSteps);
-
-        this.verifyHasDayChangedBeforeSave();
-    }
-
-    @Override
     public void resetCurrentTimer() {
 
         if(this.timer == null)
@@ -235,6 +201,56 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
     }
 
     @Override
+    public void verifyHasDayChanged() {
+        if(historyDao == null){
+            this.loadLastHistory();
+            return;
+        }
+
+        if(DateUtils.isCurrentDay(historyDao.getDate())) {
+            this.createHistory();
+        }else {
+            HashMap<HistoryDao.METRIC, Object> metrics = HistoryDao.getHistoryMetrics(historyDao);
+            tSteps = Integer.parseInt(String.valueOf(metrics.get(HistoryDao.METRIC.STEPS)));
+        }
+    }
+
+    @Override
+    public void verifyHasDayChangedBeforeSave() {
+        if(historyDao == null){
+            this.loadLastHistoryBeforeSave();
+            return;
+        }
+
+        if(DateUtils.isCurrentDay(historyDao.getDate()))
+            this.createHistory();
+    }
+
+    @Override
+    public void createHistory() {
+        historyDao  = new HistoryDao(DateUtils.toDate(DateUtils.getCurrentDate()), 0);
+        tSteps      = 0;
+    }
+
+    @Override
+    public void loadLastHistory() {
+        historyDao  = HistoryDao.lastHistory();
+        if(historyDao == null)
+            historyDao = new HistoryDao(DateUtils.toDate(DateUtils.getCurrentDate()), tSteps);
+
+        this.verifyHasDayChanged();
+    }
+
+    @Override
+    public void loadLastHistoryBeforeSave() {
+        historyDao  = HistoryDao.lastHistory();
+        if(historyDao == null)
+            historyDao = new HistoryDao(DateUtils.toDate(DateUtils.getCurrentDate()), tSteps);
+
+        this.verifyHasDayChangedBeforeSave();
+    }
+
+    @Override
     public void showCurrentWalkInfos(boolean isMoving) {
         if(isMoving){
 
@@ -247,16 +263,20 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
     @Override
     public void pushNewHistory() {
 
-        this.verifyHasDayChangedBeforeSave();
+        if(steps > 0){
 
-        historyDao.setSteps(tSteps);
-        historyDao.save();
+            this.verifyHasDayChangedBeforeSave();
 
-        ActivityDao activityDao = new ActivityDao(
-            ActivityDao.nextId(), steps, initialTimeStamp, finalTimeStamp, null, 0.0, 0.0, historyDao
-        );
+            historyDao.setSteps(tSteps);
+            historyDao.save();
 
-        service.saveHistory(this, activityDao);
+            ActivityDao activityDao = new ActivityDao(
+                    steps, initialTimeStamp, finalTimeStamp, null, 0, historyDao
+            );
+
+            service.saveActivity(this, activityDao, initialPosition);
+        }
+
         initialTimeStamp    = 0;
         finalTimeStamp      = 0;
         isLoadfirtsStep     = false;

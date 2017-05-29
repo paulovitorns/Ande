@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
@@ -12,13 +13,15 @@ import java.util.HashMap;
 
 import br.com.ande.Ande;
 import br.com.ande.R;
-import br.com.ande.business.service.HistoriesService;
+import br.com.ande.business.service.ActivitiesService;
 import br.com.ande.business.service.SessionManagerService;
 import br.com.ande.dao.ActivityDao;
+import br.com.ande.dao.LocationDao;
 import br.com.ande.model.Session;
 import br.com.ande.common.StepCountListener;
 import br.com.ande.ui.view.activity.DashBoardActivity;
 import br.com.ande.util.DateUtils;
+import br.com.ande.util.Utils;
 
 /**
  * © Copyright 2017 Ande.
@@ -26,18 +29,43 @@ import br.com.ande.util.DateUtils;
  * Empresa : Ande app.
  */
 
-public class HistoriesServiceImpl implements HistoriesService {
+public class ActivitiesServiceImpl implements ActivitiesService {
 
     @Override
-    public void saveHistory(StepCountListener listener, ActivityDao dao) {
+    public void saveActivity(StepCountListener listener, ActivityDao dao, LocationDao locationDao) {
 
         HashMap<DateUtils.DATE_DIFFERENCE, Object> data = DateUtils.printDifference(
                 DateUtils.getDateFromTimestamp(dao.getStartTime()),
                 DateUtils.getDateFromTimestamp(dao.getFinishTime())
         );
 
+        Location initialLoc = new Location("initial");
+        initialLoc.setLatitude(locationDao.getLat());
+        initialLoc.setLongitude(locationDao.getLng());
+
+        Location finalLoc   = Utils.getUserLocation(Ande.getContext());
+        if(finalLoc == null){
+            finalLoc.setLatitude(0.0);
+            finalLoc.setLongitude(0.0);
+        }
+
+        double distance = initialLoc.distanceTo(finalLoc);
+
+        dao.setDistance(distance);
         dao.setDurationTime(String.valueOf(data.get(DateUtils.DATE_DIFFERENCE.STRING)));
         dao.save();
+
+        locationDao.setActivity(dao);
+        locationDao.save();
+
+        LocationDao finalLocation;
+        if(finalLoc == null){
+            finalLocation = new LocationDao(0.0, 0.0, false, dao);
+        }else{
+            finalLocation = new LocationDao(finalLoc.getLatitude(), finalLoc.getLongitude(), false, dao);
+        }
+
+        finalLocation.save();
 
         listener.onInsertHistorySuccess(dao);
     }
