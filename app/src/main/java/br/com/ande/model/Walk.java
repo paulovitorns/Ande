@@ -60,4 +60,14 @@ public class Walk {
 
         return walks;
     }
+
+    public static Walk getLastWalkFromHistory(History history){
+
+        List<ActivityDao> daos = ActivityDao.findWithQuery(ActivityDao.class, "select * from ACTIVITY_DAO where history = ? order by id desc limit 0,1", String.valueOf(history.getId()));
+
+        if(daos.size() > 0)
+            return new Walk(daos.get(daos.size()-1));
+        else
+            return null;
+    }
 }

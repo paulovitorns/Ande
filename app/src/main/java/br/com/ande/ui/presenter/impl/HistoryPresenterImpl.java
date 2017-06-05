@@ -1,5 +1,7 @@
 package br.com.ande.ui.presenter.impl;
 
+import android.os.AsyncTask;
+
 import java.util.List;
 
 import br.com.ande.Ande;
@@ -26,17 +28,8 @@ public class HistoryPresenterImpl implements HistoryPresenter {
     @Override
     public void init() {
         this.view.showLoading();
-
-        List<History> histoties = History.histories();
-
-        if(histoties.size() > 0){
-            this.view.loadAdapter();
-            this.view.setAdapter(new HistoryAdapter(histoties, this.view.getContext()));
-        }else{
-            this.view.showEmptyState();
-        }
-
-        this.view.hideLoading();
+        HistoryTask task = new HistoryTask();
+        task.execute("histories");
     }
 
     @Override
@@ -44,4 +37,34 @@ public class HistoryPresenterImpl implements HistoryPresenter {
 
     @Override
     public void goBack() {}
+
+    private class HistoryTask extends AsyncTask<String, Void, List<History>>{
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            view.showLoading();
+        }
+
+        @Override
+        protected List<History> doInBackground(String... strings) {
+            return History.histories();
+        }
+
+        @Override
+        protected void onPostExecute(List<History> histories) {
+            super.onPostExecute(histories);
+
+            if(histories.size() > 0){
+                view.loadAdapter();
+                view.setAdapter(new HistoryAdapter(histories, view.getContext()));
+            }else{
+                view.showEmptyState();
+            }
+
+            view.hideLoading();
+        }
+
+    }
+
 }

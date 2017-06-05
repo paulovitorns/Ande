@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import br.com.ande.R;
 import br.com.ande.model.User;
-import br.com.ande.model.Walk;
 import br.com.ande.ui.presenter.AndeDashPresenter;
 import br.com.ande.ui.presenter.impl.AndeDashPresenterImpl;
 import br.com.ande.ui.view.AndeDashView;
@@ -161,18 +160,18 @@ public class DashBoardFragment extends Fragment implements AndeDashView {
     }
 
     @Override
-    public void loadLastHistory(Walk walk, int steps) {
+    public void loadLastHistory(int steps, int totalSteps) {
 
         Animation animation = AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in);
         Animation secondAnimation = AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in);
 
-        if(walk == null){
+        if(totalSteps == 0){
             containerLast.setVisibility(View.GONE);
             containerActual.startAnimation(secondAnimation);
         }else{
             containerLast.setVisibility(View.VISIBLE);
-            txLastSteps.setText(String.valueOf(walk.getSteps()));
-            txActualSteps.setText(String.valueOf(steps));
+            txLastSteps.setText(String.valueOf(steps));
+            txActualSteps.setText(String.valueOf(totalSteps));
 
             containerActual.startAnimation(secondAnimation);
             containerLast.startAnimation(animation);

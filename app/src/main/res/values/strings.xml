@@ -56,7 +56,7 @@
     <string name="local_msg_second_line">{steps} passo(s) em {time}</string>
 
     <!--history strings-->
-    <string name="history_description" formatted="false">%1$tA %1$td de %1$tb/%1$tY</string>
+    <string name="history_description" formatted="false">%1$tA, %1$td de %1$tb/%1$tY</string>
     <string name="history_description_today" formatted="false">hoje, %1$te de %1$tb/%1$tY</string>
     <string name="history_description_steps">passo(s) até o momento</string>
     <string name="history_description_steps_finished">passos dados</string>

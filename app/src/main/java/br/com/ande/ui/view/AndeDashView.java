@@ -15,7 +15,7 @@ public interface AndeDashView extends BaseView {
 
     void setPic();
 
-    void loadLastHistory(Walk walk, int steps);
+    void loadLastHistory(int steps, int totalSteps);
 
     void updateCountHistories(int histories);
 

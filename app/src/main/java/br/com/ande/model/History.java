@@ -119,9 +119,9 @@ public class History {
     }
 
     public static List<History> histories(){
-        List<History> histories = new ArrayList<>();
 
-        List<HistoryDao> daos = HistoryDao.listAll(HistoryDao.class);
+        List<History> histories = new ArrayList<>();
+        List<HistoryDao> daos   = HistoryDao.findWithQuery(HistoryDao.class, "select * from HISTORY_DAO order by date desc");
 
         if(daos.size() > 0){
             for(HistoryDao dao : daos){
