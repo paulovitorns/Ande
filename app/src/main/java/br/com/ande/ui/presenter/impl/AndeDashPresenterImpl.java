@@ -7,6 +7,7 @@ import java.util.List;
 
 import br.com.ande.business.service.SessionManagerService;
 import br.com.ande.business.service.impl.SessionManagerServiceImpl;
+import br.com.ande.common.OnUserMovingListener;
 import br.com.ande.model.History;
 import br.com.ande.model.Session;
 import br.com.ande.model.Walk;
@@ -19,9 +20,9 @@ import br.com.ande.ui.view.AndeDashView;
  * Empresa : Ande app.
  */
 
-public class AndeDashPresenterImpl implements AndeDashPresenter {
+public class AndeDashPresenterImpl implements AndeDashPresenter, OnUserMovingListener {
 
-    public AndeDashView view;
+    public  AndeDashView view;
     private SessionManagerService sessionManagerService;
 
     public AndeDashPresenterImpl(AndeDashView view) {
@@ -52,11 +53,11 @@ public class AndeDashPresenterImpl implements AndeDashPresenter {
     public void goBack() {}
 
     @Override
-    public void showStepCounter(int steps, int totalSteps, boolean isMoving) {
+    public void notifyUser(boolean isMoving, int steps) {
         if(isMoving)
             this.view.setCurrentSteps(steps);
         else
-            this.view.setStopedWalk(totalSteps);
+            this.view.setStopedWalk(steps);
     }
 
     private class DashTask extends AsyncTask<String, Void, HashMap<DASHINFODATA, Integer>>{
@@ -117,5 +118,6 @@ public class AndeDashPresenterImpl implements AndeDashPresenter {
         LAST_STEPS,
         TOTAL_STEPS
     }
+
 
 }
