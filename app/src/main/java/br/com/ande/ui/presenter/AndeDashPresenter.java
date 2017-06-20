@@ -7,5 +7,4 @@ package br.com.ande.ui.presenter;
  */
 
 public interface AndeDashPresenter extends BasePresenter {
-    void showStepCounter(int steps, int totalSteps, boolean isMoving);
 }

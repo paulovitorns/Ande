@@ -50,7 +50,6 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
     private SensorManager sensorManager;
     private Sensor  mSteps;
 
-
     /**
      * Global data to check if service is up and registered the steps
      */
@@ -131,6 +130,7 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
         }
     }
 
+
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         if(sensorEvent.sensor.getType() != Sensor.TYPE_STEP_COUNTER){
@@ -151,7 +151,6 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
 
                 steps++;
                 tSteps++;
-                showCurrentWalkInfos(true);
 
                 if(!isWaitNextStepStart){
                     resetCurrentTimer();
@@ -193,7 +192,6 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
                 finalTimeStamp      = DateUtils.getCurrentTimeInMillis();
                 pushNewHistory();
                 steps = 0;
-                showCurrentWalkInfos(false);
                 Log.d(TAG, "VAMOS REINICIAR");
             }
 
@@ -248,16 +246,6 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
             historyDao = new HistoryDao(DateUtils.toDate(DateUtils.getCurrentDate()), tSteps);
 
         this.verifyHasDayChangedBeforeSave();
-    }
-
-    @Override
-    public void showCurrentWalkInfos(boolean isMoving) {
-        if(isMoving){
-
-        }else{
-
-        }
-        Log.d(TAG, "Passos dados "+String.valueOf(tSteps));
     }
 
     @Override

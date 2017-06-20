@@ -52,7 +52,6 @@ public class History {
     private boolean isCurrentDay;
 
     public History(HistoryDao dao) {
-
         this.setDecriptionOfSteps(dao.getDate());
         this.setDescriptionHistoryText(dao.getDate());
         this.setDescritionOfDistance(dao);
