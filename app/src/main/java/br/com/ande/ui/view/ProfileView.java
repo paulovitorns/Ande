@@ -25,6 +25,8 @@ public interface ProfileView extends BaseView {
 
     void setEmailFormatError();
 
+    void setEmailRegisteredError();
+
     void setNomeDefaultState();
 
     void setBirthdateDefaultState();

@@ -122,11 +122,13 @@ public class ProfileFragment extends Fragment implements ProfileView {
     @Override
     public void onClickBtnSave() {
 
+        String oldEmail = (user.getEmail() == null || user.getEmail().equalsIgnoreCase("")) ? edtEmail.getText().toString() : user.getEmail();
+
         user.setName(edtName.getText().toString());
         user.setBirthdate(edtBirth.getText().toString());
         user.setEmail(edtEmail.getText().toString());
 
-        presenter.sendToRegister(user);
+        presenter.sendToRegister(user, oldEmail);
     }
 
     @Override
@@ -155,6 +157,13 @@ public class ProfileFragment extends Fragment implements ProfileView {
         EditTextValidadeUtils.setErrorToView(edtEmail, getContext());
         edtLayoutEmail.setErrorEnabled(true);
         edtLayoutEmail.setError(getString(R.string.error_format_email));
+    }
+
+    @Override
+    public void setEmailRegisteredError() {
+        EditTextValidadeUtils.setErrorToView(edtEmail, getContext());
+        edtLayoutEmail.setErrorEnabled(true);
+        edtLayoutEmail.setError(getString(R.string.error_registered_email));
     }
 
     @Override

@@ -13,6 +13,9 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,13 +23,19 @@ import java.util.TimerTask;
 import br.com.ande.Ande;
 import br.com.ande.R;
 import br.com.ande.business.service.ActivitiesService;
+import br.com.ande.business.service.SessionManagerService;
 import br.com.ande.business.service.impl.ActivitiesServiceImpl;
+import br.com.ande.business.service.impl.SessionManagerServiceImpl;
+import br.com.ande.common.OnLoadLastHistoryFinished;
+import br.com.ande.common.OnLoadMetricsFinished;
 import br.com.ande.common.StepCountListener;
-import br.com.ande.dao.ActivityDao;
-import br.com.ande.dao.HistoryDao;
-import br.com.ande.dao.LocationDao;
+import br.com.ande.dao.firebase.NewActivityDAO;
+import br.com.ande.dao.firebase.NewHistoryDAO;
+import br.com.ande.dao.firebase.NewLocationDAO;
+import br.com.ande.model.Session;
 import br.com.ande.service.StepCountService;
 import br.com.ande.util.DateUtils;
+import br.com.ande.util.HIstoryUtils;
 import br.com.ande.util.Utils;
 
 /**
@@ -35,7 +44,12 @@ import br.com.ande.util.Utils;
  * Empresa : Ande app.
  */
 
-public class StepCountServiceImpl extends Service implements SensorEventListener, StepCountService, StepCountListener {
+public class StepCountServiceImpl extends Service implements
+        SensorEventListener,
+        StepCountService,
+        StepCountListener,
+        OnLoadMetricsFinished,
+        OnLoadLastHistoryFinished{
 
     public static final String TAG = "StepCountService";
 
@@ -71,7 +85,7 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
     /**
      * historyDao object for take any activity created into current day
      */
-    private HistoryDao historyDao;
+    private NewHistoryDAO historyDao;
 
     /**
      * Service to save histories into DB
@@ -81,7 +95,17 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
     /**
      * var used to get initial user position
      */
-    private LocationDao initialPosition;
+    private NewLocationDAO initialPosition;
+
+    /**
+     * var used to get reference of histories in realtime database
+     */
+    private DatabaseReference dbRefHistories;
+
+    /**
+     * var used to get reference of activities in realtime database
+     */
+    private DatabaseReference dbRefActivities;
 
     @Override
     public void onCreate() {
@@ -89,7 +113,13 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
 
         Log.d(TAG, "step service Instantiated");
 
-        service = new ActivitiesServiceImpl();
+        SessionManagerService sessionManagerService = new SessionManagerServiceImpl();
+
+        Session session = sessionManagerService.getCurrentSession();
+
+        dbRefHistories  = FirebaseDatabase.getInstance().getReference(Ande.historiesData).child(session.getUser().getUid());
+
+        service     = new ActivitiesServiceImpl();
 
         this.verifyHasDayChanged();
 
@@ -124,6 +154,29 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
         return walkBinder;
     }
 
+    @Override
+    public void loadedMetrics(HashMap<HIstoryUtils.METRIC, Object> metrics) {
+        this.steps = this.tSteps + Integer.parseInt(String.valueOf(metrics.get(HIstoryUtils.METRIC.STEPS)));
+    }
+
+    @Override
+    public void loadedHistory(NewHistoryDAO historyDAO, boolean isBeforeSave) {
+
+        historyDao  = historyDAO;
+        if(historyDao == null) {
+            String uid  = dbRefHistories.push().getKey();
+            historyDao  = new NewHistoryDAO(uid, DateUtils.getCurrentDate(), tSteps);
+            tSteps      = 0;
+
+            dbRefHistories.child(uid).setValue(historyDao);
+        }
+
+        if (!isBeforeSave)
+            this.verifyHasDayChanged();
+        else
+            this.verifyHasDayChangedBeforeSave();
+    }
+
     public class LocalBinder extends Binder {
         public StepCountServiceImpl getService(){
             return StepCountServiceImpl.this;
@@ -142,9 +195,9 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
                     initialTimeStamp    = DateUtils.getCurrentTimeInMillis();
                     Location location   = Utils.getUserLocation(Ande.getContext());
                     if(location == null){
-                        initialPosition = new LocationDao(0.0, 0.0, true, null);
+                        initialPosition = new NewLocationDAO("", 0.0, 0.0, true);
                     }else{
-                        initialPosition = new LocationDao(location.getLatitude(), location.getLongitude(), true, null);
+                        initialPosition = new NewLocationDAO("", location.getLatitude(), location.getLongitude(), true);
                     }
 
                 }
@@ -205,11 +258,10 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
             return;
         }
 
-        if(DateUtils.isCurrentDay(historyDao.getDate())) {
+        if(DateUtils.isCurrentDay(DateUtils.toDate(historyDao.getDate()))) {
             this.createHistory();
         }else {
-            HashMap<HistoryDao.METRIC, Object> metrics = HistoryDao.getHistoryMetrics(historyDao);
-            tSteps = Integer.parseInt(String.valueOf(metrics.get(HistoryDao.METRIC.STEPS)));
+            HIstoryUtils.getHistoryMetrics(historyDao, this);
         }
     }
 
@@ -220,32 +272,28 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
             return;
         }
 
-        if(DateUtils.isCurrentDay(historyDao.getDate()))
+        if(DateUtils.isCurrentDay(DateUtils.toDate(historyDao.getDate())))
             this.createHistory();
     }
 
     @Override
     public void createHistory() {
-        historyDao  = new HistoryDao(DateUtils.toDate(DateUtils.getCurrentDate()), 0);
+
+        String uid  = dbRefHistories.push().getKey();
+        historyDao  = new NewHistoryDAO(uid, DateUtils.getCurrentDate(), 0);
         tSteps      = 0;
+
+        dbRefHistories.child(uid).setValue(historyDao);
     }
 
     @Override
     public void loadLastHistory() {
-        historyDao  = HistoryDao.lastHistory();
-        if(historyDao == null)
-            historyDao = new HistoryDao(DateUtils.toDate(DateUtils.getCurrentDate()), tSteps);
-
-        this.verifyHasDayChanged();
+        HIstoryUtils.lastHistory(this, false);
     }
 
     @Override
     public void loadLastHistoryBeforeSave() {
-        historyDao  = HistoryDao.lastHistory();
-        if(historyDao == null)
-            historyDao = new HistoryDao(DateUtils.toDate(DateUtils.getCurrentDate()), tSteps);
-
-        this.verifyHasDayChangedBeforeSave();
+        HIstoryUtils.lastHistory(this, true);
     }
 
     @Override
@@ -256,13 +304,19 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
             this.verifyHasDayChangedBeforeSave();
 
             historyDao.setSteps(tSteps);
-            historyDao.save();
+            dbRefHistories.child(historyDao.getHistoryId()).setValue(historyDao);
 
-            ActivityDao activityDao = new ActivityDao(
-                    steps, initialTimeStamp, finalTimeStamp, null, 0, historyDao
+            dbRefActivities = FirebaseDatabase.getInstance().getReference(Ande.activitiesData).child(historyDao.getHistoryId());
+
+            String uid = dbRefActivities.push().getKey();
+
+            NewActivityDAO activityDAO = new NewActivityDAO(
+                    uid, steps, initialTimeStamp, finalTimeStamp, null, 0, 0
             );
 
-            service.saveActivity(this, activityDao, initialPosition);
+            dbRefActivities.child(uid).setValue(activityDAO);
+
+            service.saveActivity(this, historyDao, activityDAO, initialPosition);
         }
 
         initialTimeStamp    = 0;
@@ -271,7 +325,7 @@ public class StepCountServiceImpl extends Service implements SensorEventListener
     }
 
     @Override
-    public void onInsertHistorySuccess(ActivityDao dao) {
+    public void onInsertHistorySuccess(NewActivityDAO dao) {
         service.shouldSendNotification(dao);
     }
 

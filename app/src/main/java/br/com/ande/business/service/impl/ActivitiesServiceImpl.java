@@ -9,14 +9,19 @@ import android.location.Location;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.HashMap;
+import java.util.Random;
 
 import br.com.ande.Ande;
 import br.com.ande.R;
 import br.com.ande.business.service.ActivitiesService;
 import br.com.ande.business.service.SessionManagerService;
-import br.com.ande.dao.ActivityDao;
-import br.com.ande.dao.LocationDao;
+import br.com.ande.dao.firebase.NewActivityDAO;
+import br.com.ande.dao.firebase.NewHistoryDAO;
+import br.com.ande.dao.firebase.NewLocationDAO;
 import br.com.ande.model.Session;
 import br.com.ande.common.StepCountListener;
 import br.com.ande.ui.view.activity.DashBoardActivity;
@@ -32,7 +37,15 @@ import br.com.ande.util.Utils;
 public class ActivitiesServiceImpl implements ActivitiesService {
 
     @Override
-    public void saveActivity(StepCountListener listener, ActivityDao dao, LocationDao locationDao) {
+    public void saveActivity(StepCountListener listener, NewHistoryDAO historyDAO, NewActivityDAO dao, NewLocationDAO locationDao) {
+
+        DatabaseReference dbRefActivities   = FirebaseDatabase.getInstance().getReference(Ande.activitiesData).child(historyDAO.getHistoryId());
+        DatabaseReference dbRefLocation     = FirebaseDatabase.getInstance().getReference(Ande.locationsData).child(dao.getActivityId());
+
+        String uidInitLoc = dbRefLocation.push().getKey();
+
+        locationDao.setLocationId(uidInitLoc);
+        dbRefLocation.child(uidInitLoc).setValue(locationDao);
 
         HashMap<DateUtils.DATE_DIFFERENCE, Object> data = DateUtils.printDifference(
                 DateUtils.getDateFromTimestamp(dao.getStartTime()),
@@ -53,25 +66,24 @@ public class ActivitiesServiceImpl implements ActivitiesService {
 
         dao.setDistance(distance);
         dao.setDurationTime(String.valueOf(data.get(DateUtils.DATE_DIFFERENCE.STRING)));
-        dao.save();
 
-        locationDao.setActivity(dao);
-        locationDao.save();
+        dbRefActivities.child(dao.getActivityId()).setValue(dao);
 
-        LocationDao finalLocation;
+        NewLocationDAO finalLocation;
+        String uidFinaLoc = dbRefLocation.push().getKey();
         if(finalLoc == null){
-            finalLocation = new LocationDao(0.0, 0.0, false, dao);
+            finalLocation = new NewLocationDAO(uidFinaLoc, 0.0, 0.0, false);
         }else{
-            finalLocation = new LocationDao(finalLoc.getLatitude(), finalLoc.getLongitude(), false, dao);
+            finalLocation = new NewLocationDAO(uidFinaLoc, finalLoc.getLatitude(), finalLoc.getLongitude(), false);
         }
 
-        finalLocation.save();
+        dbRefLocation.child(uidFinaLoc).setValue(finalLocation);
 
         listener.onInsertHistorySuccess(dao);
     }
 
     @Override
-    public void shouldSendNotification(ActivityDao dao) {
+    public void shouldSendNotification(NewActivityDAO dao) {
 
         HashMap<DateUtils.DATE_DIFFERENCE, Object> data = DateUtils.printDifference(
                 DateUtils.getDateFromTimestamp(dao.getStartTime()),
@@ -83,7 +95,7 @@ public class ActivitiesServiceImpl implements ActivitiesService {
     }
 
     @Override
-    public void startLocalNotification(ActivityDao dao) {
+    public void startLocalNotification(NewActivityDAO dao) {
 
         Context context = Ande.getContext();
 
@@ -151,8 +163,12 @@ public class ActivitiesServiceImpl implements ActivitiesService {
 
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Random r    = new Random();
+        int i1      = r.nextInt(1000 - 1 + 1) + 1;
+
         // mId allows you to update the notification later on.
-        mNotificationManager.notify(Integer.parseInt(String.valueOf(dao.getItemId())), mBuilder.build());
+        mNotificationManager.notify(i1, mBuilder.build());
 
     }
 

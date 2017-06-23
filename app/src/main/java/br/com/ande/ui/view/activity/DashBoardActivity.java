@@ -89,7 +89,7 @@ public class DashBoardActivity extends BaseActivity implements DashBoardView {
         bottomNavigationViewMenu.findItem(R.id.nav_history).setChecked(false);
         bottomNavigationViewMenu.findItem(R.id.nav_dash).setChecked(true);
 
-        DashBoardFragment fragment = DashBoardFragment.newInstance();
+        ProfileFragment fragment = ProfileFragment.newInstance();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frameContainer, fragment);
