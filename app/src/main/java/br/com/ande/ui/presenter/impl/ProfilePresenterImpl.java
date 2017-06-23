@@ -1,14 +1,25 @@
 package br.com.ande.ui.presenter.impl;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
+import com.firebase.client.ValueEventListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import br.com.ande.Ande;
 import br.com.ande.business.service.RegisterUserService;
 import br.com.ande.business.service.SessionManagerService;
 import br.com.ande.business.service.impl.RegisterUserServiceImpl;
 import br.com.ande.business.service.impl.SessionManagerServiceImpl;
 import br.com.ande.common.RegisterResultListener;
+import br.com.ande.dao.firebase.UserDAO;
 import br.com.ande.model.Session;
 import br.com.ande.model.User;
 import br.com.ande.ui.presenter.ProfilePresenter;
 import br.com.ande.ui.view.ProfileView;
+import br.com.ande.util.Utils;
 
 /**
  * © Copyright 2017 Ande.
@@ -22,6 +33,7 @@ public class ProfilePresenterImpl implements ProfilePresenter, RegisterResultLis
     private ProfileView             view;
     private RegisterUserService     service;
     private SessionManagerService   sessionManagerService;
+    private DatabaseReference       databaseReference;
 
     public ProfilePresenterImpl(ProfileView view){
         this.view = view;
@@ -51,16 +63,88 @@ public class ProfilePresenterImpl implements ProfilePresenter, RegisterResultLis
     }
 
     @Override
-    public void sendToRegister(User user) {
-        view.showLoading();
-        this.user     = user;
+    public void createNewUserIntoFireBase() {
 
         if(validateRegisterData()){
 
-            service.registerClient(user, this);
+            databaseReference = FirebaseDatabase.getInstance().getReference(Ande.usersData);
+            String uid = databaseReference.push().getKey();
+
+            user.setUid(uid);
+
+            UserDAO userDAO = new UserDAO(uid, user.getEmail(), Utils.md5(user.getEmail()));
+            databaseReference.child(uid).setValue(userDAO);
+
+            service.registerClient(user, ProfilePresenterImpl.this);
         }else{
             view.hideLoading();
         }
+    }
+
+    @Override
+    public void updateUserIntoFirebase() {
+
+        if(validateRegisterData()){
+
+            UserDAO userDAO = new UserDAO(user.getUid(), user.getEmail(), Utils.md5(user.getEmail()));
+
+            databaseReference = FirebaseDatabase.getInstance().getReference(Ande.usersData).child(user.getUid());
+            databaseReference.setValue(userDAO);
+
+            service.registerClient(user, ProfilePresenterImpl.this);
+        }else{
+            view.hideLoading();
+        }
+    }
+
+    @Override
+    public void requestUserUid(String oldEmail) {
+
+        Firebase ref    = new Firebase(Ande.usersUriData);
+        Query query     = ref.orderByChild("email").equalTo(oldEmail);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if(snapshot.getValue() != null) {
+                    if(snapshot.getChildrenCount() > 1) {
+                        view.hideLoading();
+                        view.setEmailRegisteredError();
+                    }else{
+                        for (DataSnapshot snap : snapshot.getChildren()) {
+                            UserDAO dao = snap.getValue(UserDAO.class);
+                            if(user.getUid() != null && user.getUid().equalsIgnoreCase(dao.getUserId())) {
+
+                                user.setUid(dao.getUserId());
+                                updateUserIntoFirebase();
+                                continue;
+                            }else{
+                                view.hideLoading();
+                                view.setEmailRegisteredError();
+                                continue;
+                            }
+                        }
+                    }
+
+                }else{
+                    createNewUserIntoFireBase();
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+    }
+
+    @Override
+    public void sendToRegister(User user, String oldEmail) {
+        view.showLoading();
+        this.user = user;
+
+        requestUserUid(oldEmail);
     }
 
     @Override

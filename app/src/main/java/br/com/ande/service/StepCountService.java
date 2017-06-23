@@ -1,7 +1,5 @@
 package br.com.ande.service;
 
-import br.com.ande.common.OnUserMovingListener;
-
 /**
  * © Copyright 2017 Ande.
  * Autor : Paulo Sales - dev@paulovns.com.br

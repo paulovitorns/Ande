@@ -1,6 +1,6 @@
 package br.com.ande.common;
 
-import br.com.ande.dao.ActivityDao;
+import br.com.ande.dao.firebase.NewActivityDAO;
 
 /**
  * © Copyright 2017 Ande.
@@ -9,5 +9,5 @@ import br.com.ande.dao.ActivityDao;
  */
 
 public interface StepCountListener {
-    void onInsertHistorySuccess(ActivityDao dao);
+    void onInsertHistorySuccess(NewActivityDAO dao);
 }

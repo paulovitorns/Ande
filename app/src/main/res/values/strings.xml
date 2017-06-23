@@ -22,6 +22,7 @@
     <string name="error_empty_birth">digite sua data de nascimento</string>
     <string name="error_empty_email">digite seu email</string>
     <string name="error_format_email">digite uma email válido</string>
+    <string name="error_registered_email">este email já esta em uso</string>
 
     <!--walk dashboard-->
     <string name="user_name">Olá, visitante!</string>

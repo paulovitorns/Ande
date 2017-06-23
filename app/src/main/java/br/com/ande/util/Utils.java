@@ -8,7 +8,10 @@ import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.util.TypedValue;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
+import java.util.Formatter;
 
 import br.com.ande.Ande;
 
@@ -78,6 +81,25 @@ public class Utils {
     public static String StringToCurrency(double km) {
         DecimalFormat dFormat = new DecimalFormat("######,###0.000");
         return dFormat.format(km)+"km";
+    }
+
+    public static String md5(String input) {
+        MessageDigest digest = null;
+        try {
+
+            digest = java.security.MessageDigest.getInstance("MD5");
+            digest.update(input.getBytes());
+            byte messageDigest[] = digest.digest();
+
+            Formatter formatter = new Formatter();
+            for (byte b : messageDigest) {
+                formatter.format("%02x", b);
+            }
+
+            return formatter.toString().trim();
+        } catch (NoSuchAlgorithmException e) {
+            return null;
+        }
     }
 
 }
