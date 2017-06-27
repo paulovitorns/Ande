@@ -7,4 +7,6 @@ package br.com.ande.ui.presenter;
  */
 
 public interface AndeDashPresenter extends BasePresenter {
+    void loadDashboard();
+    void removeDashBoardListener();
 }

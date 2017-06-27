@@ -1,11 +1,14 @@
 package br.com.ande.ui.presenter.impl;
 
-import android.os.AsyncTask;
-
 import java.util.List;
 
-import br.com.ande.Ande;
+import br.com.ande.business.service.CountHistoriesService;
+import br.com.ande.business.service.SessionManagerService;
+import br.com.ande.business.service.impl.CountHistoriesServiceImpl;
+import br.com.ande.business.service.impl.SessionManagerServiceImpl;
+import br.com.ande.common.OnLoadHistoriesFinished;
 import br.com.ande.model.History;
+import br.com.ande.model.Session;
 import br.com.ande.ui.adapter.HistoryAdapter;
 import br.com.ande.ui.presenter.HistoryPresenter;
 import br.com.ande.ui.view.HistoryView;
@@ -16,9 +19,13 @@ import br.com.ande.ui.view.HistoryView;
  * Empresa : Ande app.
  */
 
-public class HistoryPresenterImpl implements HistoryPresenter {
+public class HistoryPresenterImpl implements
+        HistoryPresenter,
+        OnLoadHistoriesFinished {
 
     private HistoryView view;
+    private SessionManagerService sessionManagerService;
+    private CountHistoriesService countHistoriesService;
 
     public HistoryPresenterImpl(HistoryView view) {
         this.view = view;
@@ -28,8 +35,15 @@ public class HistoryPresenterImpl implements HistoryPresenter {
     @Override
     public void init() {
         this.view.showLoading();
-        HistoryTask task = new HistoryTask();
-        task.execute("histories");
+
+        this.sessionManagerService = new SessionManagerServiceImpl();
+        this.countHistoriesService = new CountHistoriesServiceImpl();
+    }
+
+    @Override
+    public void onCreate() {
+        Session session = this.sessionManagerService.getCurrentSession();
+        this.countHistoriesService.countHistories(this, session.getUser());
     }
 
     @Override
@@ -38,33 +52,20 @@ public class HistoryPresenterImpl implements HistoryPresenter {
     @Override
     public void goBack() {}
 
-    private class HistoryTask extends AsyncTask<String, Void, List<History>>{
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            view.showLoading();
-        }
-
-        @Override
-        protected List<History> doInBackground(String... strings) {
-            return History.histories();
-        }
-
-        @Override
-        protected void onPostExecute(List<History> histories) {
-            super.onPostExecute(histories);
-
-            if(histories.size() > 0){
-                view.loadAdapter();
-                view.setAdapter(new HistoryAdapter(histories, view.getContext()));
-            }else{
-                view.showEmptyState();
-            }
-
+    @Override
+    public void historiesLoaded(List<History> histories) {
+        if(histories.size() > 0){
+            view.loadAdapter();
+            view.setAdapter(new HistoryAdapter(histories, view.getContext()));
+            view.hideLoading();
+        }else{
+            view.showEmptyState();
             view.hideLoading();
         }
-
     }
 
+    @Override
+    public void removerHistoriesListener() {
+        this.countHistoriesService.removeRef();
+    }
 }

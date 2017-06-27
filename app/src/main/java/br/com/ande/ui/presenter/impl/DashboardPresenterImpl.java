@@ -30,6 +30,11 @@ public class DashboardPresenterImpl implements DashboardPresenter {
     }
 
     @Override
+    public void onCreate() {
+
+    }
+
+    @Override
     public void tryAgain() {
 
     }

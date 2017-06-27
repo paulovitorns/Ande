@@ -156,7 +156,7 @@ public class StepCountServiceImpl extends Service implements
 
     @Override
     public void loadedMetrics(HashMap<HIstoryUtils.METRIC, Object> metrics) {
-        this.steps = this.tSteps + Integer.parseInt(String.valueOf(metrics.get(HIstoryUtils.METRIC.STEPS)));
+        this.tSteps = Integer.parseInt(String.valueOf(metrics.get(HIstoryUtils.METRIC.STEPS)));
     }
 
     @Override
@@ -261,6 +261,7 @@ public class StepCountServiceImpl extends Service implements
         if(DateUtils.isCurrentDay(DateUtils.toDate(historyDao.getDate()))) {
             this.createHistory();
         }else {
+
             HIstoryUtils.getHistoryMetrics(historyDao, this);
         }
     }
@@ -288,12 +289,20 @@ public class StepCountServiceImpl extends Service implements
 
     @Override
     public void loadLastHistory() {
-        HIstoryUtils.lastHistory(this, false);
+
+        SessionManagerService sessionManagerService = new SessionManagerServiceImpl();
+        Session session = sessionManagerService.getCurrentSession();
+
+        HIstoryUtils.lastHistory(this, false, session.getUser().getUid());
     }
 
     @Override
     public void loadLastHistoryBeforeSave() {
-        HIstoryUtils.lastHistory(this, true);
+
+        SessionManagerService sessionManagerService = new SessionManagerServiceImpl();
+        Session session = sessionManagerService.getCurrentSession();
+
+        HIstoryUtils.lastHistory(this, true, session.getUser().getUid());
     }
 
     @Override
@@ -305,6 +314,7 @@ public class StepCountServiceImpl extends Service implements
 
             historyDao.setSteps(tSteps);
             dbRefHistories.child(historyDao.getHistoryId()).setValue(historyDao);
+            tSteps = 0;
 
             dbRefActivities = FirebaseDatabase.getInstance().getReference(Ande.activitiesData).child(historyDao.getHistoryId());
 

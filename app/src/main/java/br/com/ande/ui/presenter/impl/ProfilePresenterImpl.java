@@ -53,6 +53,11 @@ public class ProfilePresenterImpl implements ProfilePresenter, RegisterResultLis
     }
 
     @Override
+    public void onCreate() {
+
+    }
+
+    @Override
     public void tryAgain() {
 
     }

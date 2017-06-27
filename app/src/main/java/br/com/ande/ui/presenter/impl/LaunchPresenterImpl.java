@@ -32,6 +32,11 @@ public class LaunchPresenterImpl implements LaunchPresenter {
     }
 
     @Override
+    public void onCreate() {
+
+    }
+
+    @Override
     public void tryAgain() {}
 
     @Override
