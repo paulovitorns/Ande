@@ -52,7 +52,6 @@ public class DashBoardFragment extends Fragment implements AndeDashView {
     private AndeDashPresenter   presenter;
     private User                user;
 
-
     public DashBoardFragment(){
 
     }
@@ -73,14 +72,33 @@ public class DashBoardFragment extends Fragment implements AndeDashView {
         targetW = Utils.dp2px((int) (getResources().getDimension(R.dimen.img_dash_size) / getResources().getDisplayMetrics().density));
 
         this.presenter = new AndeDashPresenterImpl(this);
-        this.user = new User();
+
+        if(savedInstanceState != null){
+            showInfoUser((User) savedInstanceState.getSerializable(User.KEY));
+        }else{
+            this.user = new User();
+            this.presenter.onCreate();
+        }
 
         return view;
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(User.KEY, user);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        presenter.loadDashboard();
+    }
+
+    @Override
+    public void onDestroy() {
+        presenter.removeDashBoardListener();
+        super.onDestroy();
     }
 
     @Override
@@ -162,19 +180,12 @@ public class DashBoardFragment extends Fragment implements AndeDashView {
     @Override
     public void loadLastHistory(int steps, int totalSteps) {
 
-        Animation animation = AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in);
-        Animation secondAnimation = AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in);
-
         if(totalSteps == 0){
             containerLast.setVisibility(View.GONE);
-            containerActual.startAnimation(secondAnimation);
         }else{
             containerLast.setVisibility(View.VISIBLE);
             txLastSteps.setText(String.valueOf(steps));
             txActualSteps.setText(String.valueOf(totalSteps));
-
-            containerActual.startAnimation(secondAnimation);
-            containerLast.startAnimation(animation);
         }
 
     }

@@ -1,18 +1,20 @@
 package br.com.ande.ui.presenter.impl;
 
-import android.os.AsyncTask;
-
-import java.util.HashMap;
 import java.util.List;
 
+import br.com.ande.business.service.CountHistoriesService;
 import br.com.ande.business.service.SessionManagerService;
+import br.com.ande.business.service.impl.CountHistoriesServiceImpl;
 import br.com.ande.business.service.impl.SessionManagerServiceImpl;
+import br.com.ande.common.OnLoadHistoriesFinished;
 import br.com.ande.common.OnUserMovingListener;
+import br.com.ande.common.OnWalkFinished;
 import br.com.ande.model.History;
 import br.com.ande.model.Session;
 import br.com.ande.model.Walk;
 import br.com.ande.ui.presenter.AndeDashPresenter;
 import br.com.ande.ui.view.AndeDashView;
+import br.com.ande.util.ActivitiesUtils;
 
 /**
  * © Copyright 2017 Ande.
@@ -20,10 +22,16 @@ import br.com.ande.ui.view.AndeDashView;
  * Empresa : Ande app.
  */
 
-public class AndeDashPresenterImpl implements AndeDashPresenter, OnUserMovingListener {
+public class AndeDashPresenterImpl implements
+        AndeDashPresenter,
+        OnUserMovingListener,
+        OnLoadHistoriesFinished,
+        OnWalkFinished {
 
-    public  AndeDashView view;
+    private AndeDashView view;
     private SessionManagerService sessionManagerService;
+    private CountHistoriesService countHistoriesService;
+    private History actHistory;
 
     public AndeDashPresenterImpl(AndeDashView view) {
         this.view = view;
@@ -34,15 +42,16 @@ public class AndeDashPresenterImpl implements AndeDashPresenter, OnUserMovingLis
     public void init() {
         this.view.showLoading();
         this.sessionManagerService = new SessionManagerServiceImpl();
+        this.countHistoriesService = new CountHistoriesServiceImpl();
+    }
 
+    @Override
+    public void onCreate() {
         Session session = this.sessionManagerService.getCurrentSession();
 
         if(session != null && session.getUser() != null){
             this.view.showInfoUser(session.getUser());
         }
-
-        DashTask dashTask = new DashTask();
-        dashTask.execute("dash");
 
     }
 
@@ -60,64 +69,34 @@ public class AndeDashPresenterImpl implements AndeDashPresenter, OnUserMovingLis
             this.view.setStopedWalk(steps);
     }
 
-    private class DashTask extends AsyncTask<String, Void, HashMap<DASHINFODATA, Integer>>{
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            view.showLoading();
+    @Override
+    public void historiesLoaded(List<History> histories) {
+        if(histories != null && histories.size() > 0) {
+            view.updateCountHistories(histories.size());
+            actHistory = histories.get(histories.size()-1);
+            ActivitiesUtils.lastWalk(this, actHistory);
+        }else {
+            this.view.hideLoading();
+            view.loadLastHistory(0, 0);
+            view.setNullCountHistories();
         }
-
-        @Override
-        protected HashMap<DASHINFODATA, Integer> doInBackground(String... strings) {
-
-            HashMap<DASHINFODATA, Integer> data = new HashMap<>();
-
-            List<History> histories = History.histories();
-
-            if(histories.size() > 0) {
-
-                History history = histories.get(0);
-
-                Walk walk = Walk.getLastWalkFromHistory(history);
-
-                data.put(DASHINFODATA.COUNT_HISTORIES, histories.size());
-                data.put(DASHINFODATA.LAST_STEPS, (walk != null) ? walk.getSteps() : 0);
-                data.put(DASHINFODATA.TOTAL_STEPS, history.getSteps());
-            }else {
-
-                data.put(DASHINFODATA.COUNT_HISTORIES, 0);
-                data.put(DASHINFODATA.LAST_STEPS, 0);
-                data.put(DASHINFODATA.TOTAL_STEPS, 0);
-            }
-
-            return data;
-        }
-
-        @Override
-        protected void onPostExecute(HashMap<DASHINFODATA, Integer> infos) {
-            super.onPostExecute(infos);
-
-            if(infos.get(DASHINFODATA.COUNT_HISTORIES) > 0) {
-
-                view.loadLastHistory(infos.get(DASHINFODATA.LAST_STEPS), infos.get(DASHINFODATA.TOTAL_STEPS));
-                view.updateCountHistories(infos.get(DASHINFODATA.COUNT_HISTORIES));
-            }else {
-
-                view.loadLastHistory(0, 0);
-                view.setNullCountHistories();
-            }
-
-            view.hideLoading();
-        }
-
     }
 
-    public enum DASHINFODATA{
-        COUNT_HISTORIES,
-        LAST_STEPS,
-        TOTAL_STEPS
+    @Override
+    public void walkLoaded(Walk walk) {
+        view.loadLastHistory((walk != null) ? walk.getSteps():0, actHistory.getSteps());
+        view.hideLoading();
     }
 
+    @Override
+    public void loadDashboard() {
 
+        Session session = this.sessionManagerService.getCurrentSession();
+        this.countHistoriesService.countHistories(this, session.getUser());
+    }
+
+    @Override
+    public void removeDashBoardListener() {
+        this.countHistoriesService.removeRef();
+    }
 }

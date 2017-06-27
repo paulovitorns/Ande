@@ -7,4 +7,5 @@ package br.com.ande.ui.presenter;
  */
 
 public interface HistoryPresenter extends BasePresenter {
+    void removerHistoriesListener();
 }

@@ -54,10 +54,16 @@ public class HistoryFragment extends Fragment implements HistoryView {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onStart() {
+        super.onStart();
+        presenter.onCreate();
     }
 
+    @Override
+    public void onDestroy() {
+        presenter.removerHistoriesListener();
+        super.onDestroy();
+    }
 
     @Override
     public Activity getContext() {

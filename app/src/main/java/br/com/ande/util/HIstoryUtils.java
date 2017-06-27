@@ -22,8 +22,8 @@ import br.com.ande.dao.firebase.NewHistoryDAO;
 
 public class HIstoryUtils {
 
-    public static void lastHistory(final OnLoadLastHistoryFinished listener, final boolean isBeforeSave){
-        Firebase ref    = new Firebase(Ande.historiesUriData);
+    public static void lastHistory(final OnLoadLastHistoryFinished listener, final boolean isBeforeSave, String uid){
+        Firebase ref    = new Firebase(Ande.historiesUriData).child(uid);
         Query query     = ref.limitToLast(1);
 
         query.addValueEventListener(new ValueEventListener() {
@@ -33,10 +33,8 @@ public class HIstoryUtils {
                 NewHistoryDAO historyDAO = null;
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    for (DataSnapshot subSnap : snapshot.getChildren()) {
-                        historyDAO = subSnap.getValue(NewHistoryDAO.class);
-                        continue;
-                    }
+                    historyDAO = snapshot.getValue(NewHistoryDAO.class);
+                    continue;
                 }
                 listener.loadedHistory(historyDAO, isBeforeSave);
             }
@@ -50,7 +48,7 @@ public class HIstoryUtils {
 
     public static void getHistoryMetrics(NewHistoryDAO history, final OnLoadMetricsFinished listener){
 
-        Firebase ref    = new Firebase(Ande.historiesUriData);
+        Firebase ref    = new Firebase(Ande.activitiesUriData);
         Query query     = ref.child(history.getHistoryId());
 
         query.addValueEventListener(new ValueEventListener() {

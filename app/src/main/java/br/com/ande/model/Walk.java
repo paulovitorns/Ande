@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.ande.dao.ActivityDao;
+import br.com.ande.dao.firebase.NewActivityDAO;
 
 /**
  * © Copyright 2017 Ande.
@@ -16,7 +17,7 @@ public class Walk {
     /**
      * reference of ActivityDao
      */
-    private long id;
+    private String id;
 
     /**
      * show some text like "1h 10m 5s"
@@ -28,13 +29,13 @@ public class Walk {
      */
     private int     steps;
 
-    public Walk(ActivityDao dao) {
-        this.id             = dao.getItemId();
+    public Walk(NewActivityDAO dao) {
+        this.id             = dao.getActivityId();
         this.durationTime   = dao.getDurationTime();
         this.steps          = dao.getSteps();
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
@@ -46,28 +47,4 @@ public class Walk {
         return steps;
     }
 
-    public static List<Walk> getWalksFromHistory(History history){
-
-        List<Walk> walks = new ArrayList<>();
-
-        List<ActivityDao> daos = ActivityDao.find(ActivityDao.class, "history = ?", String.valueOf(history.getId()));
-
-        if(daos.size() > 0){
-            for (ActivityDao dao : daos){
-                walks.add(new Walk(dao));
-            }
-        }
-
-        return walks;
-    }
-
-    public static Walk getLastWalkFromHistory(History history){
-
-        List<ActivityDao> daos = ActivityDao.findWithQuery(ActivityDao.class, "select * from ACTIVITY_DAO where history = ? order by id desc limit 0,1", String.valueOf(history.getId()));
-
-        if(daos.size() > 0)
-            return new Walk(daos.get(daos.size()-1));
-        else
-            return null;
-    }
 }
