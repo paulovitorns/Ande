@@ -16,6 +16,7 @@ import br.com.ande.ui.presenter.HistoryPresenter;
 import br.com.ande.ui.presenter.impl.HistoryPresenterImpl;
 import br.com.ande.ui.view.DashBoardView;
 import br.com.ande.ui.view.HistoryView;
+import br.com.ande.util.ActivitiesUtils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -62,6 +63,7 @@ public class HistoryFragment extends Fragment implements HistoryView {
     @Override
     public void onDestroy() {
         presenter.removerHistoriesListener();
+        ActivitiesUtils.removeWalkListner();
         super.onDestroy();
     }
 

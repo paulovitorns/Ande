@@ -14,7 +14,7 @@ import br.com.ande.business.service.SessionManagerService;
 import br.com.ande.business.service.impl.RegisterUserServiceImpl;
 import br.com.ande.business.service.impl.SessionManagerServiceImpl;
 import br.com.ande.common.RegisterResultListener;
-import br.com.ande.dao.firebase.UserDAO;
+import br.com.ande.dao.UserDAO;
 import br.com.ande.model.Session;
 import br.com.ande.model.User;
 import br.com.ande.ui.presenter.ProfilePresenter;

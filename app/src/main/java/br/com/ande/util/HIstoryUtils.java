@@ -11,8 +11,8 @@ import java.util.HashMap;
 import br.com.ande.Ande;
 import br.com.ande.common.OnLoadLastHistoryFinished;
 import br.com.ande.common.OnLoadMetricsFinished;
-import br.com.ande.dao.firebase.NewActivityDAO;
-import br.com.ande.dao.firebase.NewHistoryDAO;
+import br.com.ande.dao.ActivityDAO;
+import br.com.ande.dao.HistoryDAO;
 
 /**
  * © Copyright 2017 Ande.
@@ -30,10 +30,10 @@ public class HIstoryUtils {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                NewHistoryDAO historyDAO = null;
+                HistoryDAO historyDAO = null;
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    historyDAO = snapshot.getValue(NewHistoryDAO.class);
+                    historyDAO = snapshot.getValue(HistoryDAO.class);
                     continue;
                 }
                 listener.loadedHistory(historyDAO, isBeforeSave);
@@ -46,7 +46,7 @@ public class HIstoryUtils {
         });
     }
 
-    public static void getHistoryMetrics(NewHistoryDAO history, final OnLoadMetricsFinished listener){
+    public static void getHistoryMetrics(HistoryDAO history, final OnLoadMetricsFinished listener){
 
         Firebase ref    = new Firebase(Ande.activitiesUriData);
         Query query     = ref.child(history.getHistoryId());
@@ -62,7 +62,7 @@ public class HIstoryUtils {
                 int     kal         = 0;
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    NewActivityDAO activity = snapshot.getValue(NewActivityDAO.class);
+                    ActivityDAO activity = snapshot.getValue(ActivityDAO.class);
 
                     steps       = steps     + activity.getSteps();
                     distance    = distance  + activity.getDistance();

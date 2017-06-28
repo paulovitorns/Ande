@@ -2,6 +2,9 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+apply from: "../artifacts.gradle"
 
 def versionMajor = 1
 def versionMinor = 0
@@ -48,6 +51,20 @@ android {
 
 }
 
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -55,7 +72,6 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
-    compile 'com.github.satyan:sugar:1.5'
     compile 'com.android.support:cardview-v7:25.3.1'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.google.android.gms:play-services-maps:11.0.0'
@@ -69,6 +85,9 @@ dependencies {
     compile 'com.google.firebase:firebase-messaging:11.0.0'
     compile 'com.firebase:firebase-client-android:2.5.2+'
     testCompile 'junit:junit:4.12'
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true;
+    }
 }
 
 apply plugin: 'com.google.gms.google-services'

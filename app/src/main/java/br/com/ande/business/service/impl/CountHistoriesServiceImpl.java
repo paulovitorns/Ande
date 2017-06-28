@@ -11,9 +11,8 @@ import java.util.List;
 
 import br.com.ande.Ande;
 import br.com.ande.business.service.CountHistoriesService;
-import br.com.ande.common.OnActivitiesLoaded;
 import br.com.ande.common.OnLoadHistoriesFinished;
-import br.com.ande.dao.firebase.NewHistoryDAO;
+import br.com.ande.dao.HistoryDAO;
 import br.com.ande.model.History;
 import br.com.ande.model.User;
 
@@ -25,19 +24,21 @@ import br.com.ande.model.User;
 
 public class CountHistoriesServiceImpl implements CountHistoriesService {
     private Firebase dbRef;
+    private ValueEventListener valueEventListener;
+    private Query query;
 
     @Override
     public void countHistories(final OnLoadHistoriesFinished listener, User user) {
         dbRef = new Firebase(Ande.historiesUriData).child(user.getUid());
-        Query query = dbRef.orderByValue();
+        query = dbRef.orderByValue();
 
-        query.addValueEventListener(new ValueEventListener() {
+        this.valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<History> histories = new ArrayList<History>();
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    histories.add(new History(snapshot.getValue(NewHistoryDAO.class)));
+                    histories.add(new History(snapshot.getValue(HistoryDAO.class)));
                 }
                 listener.historiesLoaded(histories);
             }
@@ -47,17 +48,15 @@ public class CountHistoriesServiceImpl implements CountHistoriesService {
                 listener.historiesLoaded(null);
             }
 
-        });
+        };
+
+        query.addValueEventListener(this.valueEventListener);
     }
 
     @Override
     public void removeRef() {
-        Query query = dbRef.orderByValue();
-        query.removeEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {}
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {}
-        });
+        if(query != null)
+            if(valueEventListener != null)
+                query.removeEventListener(this.valueEventListener);
     }
 }

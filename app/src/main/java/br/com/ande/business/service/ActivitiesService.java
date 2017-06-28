@@ -1,9 +1,9 @@
 package br.com.ande.business.service;
 
 import br.com.ande.common.StepCountListener;
-import br.com.ande.dao.firebase.NewActivityDAO;
-import br.com.ande.dao.firebase.NewHistoryDAO;
-import br.com.ande.dao.firebase.NewLocationDAO;
+import br.com.ande.dao.ActivityDAO;
+import br.com.ande.dao.HistoryDAO;
+import br.com.ande.dao.LocationDAO;
 
 /**
  * © Copyright 2017 Ande.
@@ -22,7 +22,7 @@ public interface ActivitiesService {
      * @param       listener    listener para retornar a confirmação do salvament
      * @param       dao         objeto da última atividade do usuário
      */
-    void saveActivity(StepCountListener listener, NewHistoryDAO historyDAO, NewActivityDAO dao, NewLocationDAO locationDao);
+    void saveActivity(StepCountListener listener, HistoryDAO historyDAO, ActivityDAO dao, LocationDAO locationDao);
 
     /**
      * shouldSendNotification method
@@ -33,7 +33,7 @@ public interface ActivitiesService {
      *
      * @param       dao atividade a ser validada
      */
-    void shouldSendNotification(NewActivityDAO dao);
+    void shouldSendNotification(ActivityDAO dao);
 
     /**
      * showCurrentWalkInfos method
@@ -43,6 +43,6 @@ public interface ActivitiesService {
      *
      * @param       dao atividade a ser validada
      */
-    void startLocalNotification(NewActivityDAO dao);
+    void startLocalNotification(ActivityDAO dao);
 
 }

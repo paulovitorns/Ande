@@ -1,0 +1,33 @@
+android.applicationVariants.all { variant ->
+    def appName
+    //Check if an applicationName property is supplied; if not use the name of the parent project.
+    if (project.hasProperty("applicationName")) {
+        appName = applicationName
+    } else {
+        appName = parent.name
+    }
+
+    variant.outputs.each { output ->
+        def newApkName
+        //If there's no signingConfig it means that apk is not signed and we need to mark it as such.
+        if (variant.signingConfig) {
+            newApkName = "${appName}-${output.baseName}.apk"
+        } else {
+            newApkName = "${appName}-${output.baseName}-unsigned.apk"
+        }
+        output.outputFile = new File(output.outputFile.parent, newApkName)
+    }
+}
+
+// delete unaligned files
+android.applicationVariants.all { variant ->
+    variant.assemble.doLast {
+        variant.outputs.each { output ->
+            File unaligned = output.packageApplication.outputFile;
+            File aligned = output.outputFile
+            if (!unaligned.getName().equalsIgnoreCase(aligned.getName())) {
+                unaligned.delete()
+            }
+        }
+    }
+}

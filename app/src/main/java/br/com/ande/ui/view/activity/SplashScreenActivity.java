@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import br.com.ande.Ande;
 import br.com.ande.R;
 import br.com.ande.service.impl.StepCountServiceImpl;
 import br.com.ande.ui.presenter.LaunchPresenter;
@@ -43,6 +44,9 @@ public class SplashScreenActivity extends BaseActivity implements LauchView {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+        Ande.logUserIntoFabric();
+
         setTheme(R.style.AppTheme);
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);

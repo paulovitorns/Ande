@@ -29,9 +29,9 @@ import br.com.ande.business.service.impl.SessionManagerServiceImpl;
 import br.com.ande.common.OnLoadLastHistoryFinished;
 import br.com.ande.common.OnLoadMetricsFinished;
 import br.com.ande.common.StepCountListener;
-import br.com.ande.dao.firebase.NewActivityDAO;
-import br.com.ande.dao.firebase.NewHistoryDAO;
-import br.com.ande.dao.firebase.NewLocationDAO;
+import br.com.ande.dao.ActivityDAO;
+import br.com.ande.dao.HistoryDAO;
+import br.com.ande.dao.LocationDAO;
 import br.com.ande.model.Session;
 import br.com.ande.service.StepCountService;
 import br.com.ande.util.DateUtils;
@@ -85,7 +85,7 @@ public class StepCountServiceImpl extends Service implements
     /**
      * historyDao object for take any activity created into current day
      */
-    private NewHistoryDAO historyDao;
+    private HistoryDAO historyDao;
 
     /**
      * Service to save histories into DB
@@ -95,7 +95,7 @@ public class StepCountServiceImpl extends Service implements
     /**
      * var used to get initial user position
      */
-    private NewLocationDAO initialPosition;
+    private LocationDAO initialPosition;
 
     /**
      * var used to get reference of histories in realtime database
@@ -107,13 +107,19 @@ public class StepCountServiceImpl extends Service implements
      */
     private DatabaseReference dbRefActivities;
 
+    /**
+     * var used to get reference of user session
+     */
+    private SessionManagerService sessionManagerService;
+
+
     @Override
     public void onCreate() {
         super.onCreate();
 
         Log.d(TAG, "step service Instantiated");
 
-        SessionManagerService sessionManagerService = new SessionManagerServiceImpl();
+        sessionManagerService = new SessionManagerServiceImpl();
 
         Session session = sessionManagerService.getCurrentSession();
 
@@ -160,12 +166,12 @@ public class StepCountServiceImpl extends Service implements
     }
 
     @Override
-    public void loadedHistory(NewHistoryDAO historyDAO, boolean isBeforeSave) {
+    public void loadedHistory(HistoryDAO historyDAO, boolean isBeforeSave) {
 
         historyDao  = historyDAO;
         if(historyDao == null) {
             String uid  = dbRefHistories.push().getKey();
-            historyDao  = new NewHistoryDAO(uid, DateUtils.getCurrentDate(), tSteps);
+            historyDao  = new HistoryDAO(uid, DateUtils.getCurrentDate(), tSteps);
             tSteps      = 0;
 
             dbRefHistories.child(uid).setValue(historyDao);
@@ -195,9 +201,9 @@ public class StepCountServiceImpl extends Service implements
                     initialTimeStamp    = DateUtils.getCurrentTimeInMillis();
                     Location location   = Utils.getUserLocation(Ande.getContext());
                     if(location == null){
-                        initialPosition = new NewLocationDAO("", 0.0, 0.0, true);
+                        initialPosition = new LocationDAO("", 0.0, 0.0, true);
                     }else{
-                        initialPosition = new NewLocationDAO("", location.getLatitude(), location.getLongitude(), true);
+                        initialPosition = new LocationDAO("", location.getLatitude(), location.getLongitude(), true);
                     }
 
                 }
@@ -281,7 +287,7 @@ public class StepCountServiceImpl extends Service implements
     public void createHistory() {
 
         String uid  = dbRefHistories.push().getKey();
-        historyDao  = new NewHistoryDAO(uid, DateUtils.getCurrentDate(), 0);
+        historyDao  = new HistoryDAO(uid, DateUtils.getCurrentDate(), 0);
         tSteps      = 0;
 
         dbRefHistories.child(uid).setValue(historyDao);
@@ -290,7 +296,7 @@ public class StepCountServiceImpl extends Service implements
     @Override
     public void loadLastHistory() {
 
-        SessionManagerService sessionManagerService = new SessionManagerServiceImpl();
+        sessionManagerService = new SessionManagerServiceImpl();
         Session session = sessionManagerService.getCurrentSession();
 
         HIstoryUtils.lastHistory(this, false, session.getUser().getUid());
@@ -299,7 +305,7 @@ public class StepCountServiceImpl extends Service implements
     @Override
     public void loadLastHistoryBeforeSave() {
 
-        SessionManagerService sessionManagerService = new SessionManagerServiceImpl();
+        sessionManagerService = new SessionManagerServiceImpl();
         Session session = sessionManagerService.getCurrentSession();
 
         HIstoryUtils.lastHistory(this, true, session.getUser().getUid());
@@ -320,7 +326,7 @@ public class StepCountServiceImpl extends Service implements
 
             String uid = dbRefActivities.push().getKey();
 
-            NewActivityDAO activityDAO = new NewActivityDAO(
+            ActivityDAO activityDAO = new ActivityDAO(
                     uid, steps, initialTimeStamp, finalTimeStamp, null, 0, 0
             );
 
@@ -335,7 +341,7 @@ public class StepCountServiceImpl extends Service implements
     }
 
     @Override
-    public void onInsertHistorySuccess(NewActivityDAO dao) {
+    public void onInsertHistorySuccess(ActivityDAO dao) {
         service.shouldSendNotification(dao);
     }
 

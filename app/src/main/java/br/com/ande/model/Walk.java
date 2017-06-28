@@ -1,10 +1,6 @@
 package br.com.ande.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import br.com.ande.dao.ActivityDao;
-import br.com.ande.dao.firebase.NewActivityDAO;
+import br.com.ande.dao.ActivityDAO;
 
 /**
  * © Copyright 2017 Ande.
@@ -29,7 +25,7 @@ public class Walk {
      */
     private int     steps;
 
-    public Walk(NewActivityDAO dao) {
+    public Walk(ActivityDAO dao) {
         this.id             = dao.getActivityId();
         this.durationTime   = dao.getDurationTime();
         this.steps          = dao.getSteps();
