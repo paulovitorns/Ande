@@ -1,17 +1,14 @@
 package br.com.ande.model;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.List;
 
 import br.com.ande.Ande;
 import br.com.ande.R;
 import br.com.ande.common.OnLoadMetricsFinished;
-import br.com.ande.dao.HistoryDao;
-import br.com.ande.dao.firebase.NewHistoryDAO;
+import br.com.ande.dao.HistoryDAO;
 import br.com.ande.util.DateUtils;
 import br.com.ande.util.HIstoryUtils;
 import br.com.ande.util.Utils;
@@ -54,7 +51,7 @@ public class History implements OnLoadMetricsFinished {
      */
     private boolean isCurrentDay;
 
-    public History(NewHistoryDAO dao) {
+    public History(HistoryDAO dao) {
         this.setDecriptionOfSteps(DateUtils.toDate(dao.getDate()));
         this.setDescriptionHistoryText(DateUtils.toDate(dao.getDate()));
         this.setDescritionOfDistance(dao);
@@ -88,7 +85,7 @@ public class History implements OnLoadMetricsFinished {
 
     }
 
-    private void setDescritionOfDistance(NewHistoryDAO dao){
+    private void setDescritionOfDistance(HistoryDAO dao){
         HIstoryUtils.getHistoryMetrics(dao, this);
     }
 

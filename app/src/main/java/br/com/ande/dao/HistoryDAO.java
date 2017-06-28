@@ -1,4 +1,4 @@
-package br.com.ande.dao.firebase;
+package br.com.ande.dao;
 
 /**
  * © Copyright 2017 Ande.
@@ -6,15 +6,15 @@ package br.com.ande.dao.firebase;
  * Empresa : Ande app.
  */
 
-public class NewHistoryDAO {
+public class HistoryDAO {
 
     String  historyId;
     String  date;
     int     steps;
 
-    public NewHistoryDAO() {}
+    public HistoryDAO() {}
 
-    public NewHistoryDAO(String historyId, String date, int steps) {
+    public HistoryDAO(String historyId, String date, int steps) {
         this.historyId  = historyId;
         this.date       = date;
         this.steps      = steps;

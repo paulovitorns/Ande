@@ -22,6 +22,7 @@ import br.com.ande.ui.presenter.impl.AndeDashPresenterImpl;
 import br.com.ande.ui.view.AndeDashView;
 import br.com.ande.ui.view.DashBoardView;
 import br.com.ande.ui.view.activity.DashBoardActivity;
+import br.com.ande.util.ActivitiesUtils;
 import br.com.ande.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -98,6 +99,7 @@ public class DashBoardFragment extends Fragment implements AndeDashView {
     @Override
     public void onDestroy() {
         presenter.removeDashBoardListener();
+        ActivitiesUtils.removeWalkListner();
         super.onDestroy();
     }
 
@@ -144,7 +146,7 @@ public class DashBoardFragment extends Fragment implements AndeDashView {
 
     @Override
     public void hideLoading() {
-        ((DashBoardView)getActivity()).hideLoading();
+        ((DashBoardActivity)getActivity()).hideLoading();
     }
 
 

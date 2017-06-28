@@ -1,7 +1,6 @@
 package br.com.ande.model;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * © Copyright 2017 Ande.

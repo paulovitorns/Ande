@@ -1,6 +1,6 @@
 package br.com.ande.common;
 
-import br.com.ande.dao.firebase.NewHistoryDAO;
+import br.com.ande.dao.HistoryDAO;
 
 /**
  * © Copyright 2017 Ande.
@@ -10,5 +10,5 @@ import br.com.ande.dao.firebase.NewHistoryDAO;
 
 public interface OnLoadLastHistoryFinished {
 
-    void loadedHistory(NewHistoryDAO historyDAO, boolean isBeforeSave);
+    void loadedHistory(HistoryDAO historyDAO, boolean isBeforeSave);
 }

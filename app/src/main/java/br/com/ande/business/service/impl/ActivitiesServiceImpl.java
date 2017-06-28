@@ -19,9 +19,9 @@ import br.com.ande.Ande;
 import br.com.ande.R;
 import br.com.ande.business.service.ActivitiesService;
 import br.com.ande.business.service.SessionManagerService;
-import br.com.ande.dao.firebase.NewActivityDAO;
-import br.com.ande.dao.firebase.NewHistoryDAO;
-import br.com.ande.dao.firebase.NewLocationDAO;
+import br.com.ande.dao.ActivityDAO;
+import br.com.ande.dao.HistoryDAO;
+import br.com.ande.dao.LocationDAO;
 import br.com.ande.model.Session;
 import br.com.ande.common.StepCountListener;
 import br.com.ande.ui.view.activity.DashBoardActivity;
@@ -37,7 +37,7 @@ import br.com.ande.util.Utils;
 public class ActivitiesServiceImpl implements ActivitiesService {
 
     @Override
-    public void saveActivity(StepCountListener listener, NewHistoryDAO historyDAO, NewActivityDAO dao, NewLocationDAO locationDao) {
+    public void saveActivity(StepCountListener listener, HistoryDAO historyDAO, ActivityDAO dao, LocationDAO locationDao) {
 
         DatabaseReference dbRefActivities   = FirebaseDatabase.getInstance().getReference(Ande.activitiesData).child(historyDAO.getHistoryId());
         DatabaseReference dbRefLocation     = FirebaseDatabase.getInstance().getReference(Ande.locationsData).child(dao.getActivityId());
@@ -69,12 +69,12 @@ public class ActivitiesServiceImpl implements ActivitiesService {
 
         dbRefActivities.child(dao.getActivityId()).setValue(dao);
 
-        NewLocationDAO finalLocation;
+        LocationDAO finalLocation;
         String uidFinaLoc = dbRefLocation.push().getKey();
         if(finalLoc == null){
-            finalLocation = new NewLocationDAO(uidFinaLoc, 0.0, 0.0, false);
+            finalLocation = new LocationDAO(uidFinaLoc, 0.0, 0.0, false);
         }else{
-            finalLocation = new NewLocationDAO(uidFinaLoc, finalLoc.getLatitude(), finalLoc.getLongitude(), false);
+            finalLocation = new LocationDAO(uidFinaLoc, finalLoc.getLatitude(), finalLoc.getLongitude(), false);
         }
 
         dbRefLocation.child(uidFinaLoc).setValue(finalLocation);
@@ -83,7 +83,7 @@ public class ActivitiesServiceImpl implements ActivitiesService {
     }
 
     @Override
-    public void shouldSendNotification(NewActivityDAO dao) {
+    public void shouldSendNotification(ActivityDAO dao) {
 
         HashMap<DateUtils.DATE_DIFFERENCE, Object> data = DateUtils.printDifference(
                 DateUtils.getDateFromTimestamp(dao.getStartTime()),
@@ -95,7 +95,7 @@ public class ActivitiesServiceImpl implements ActivitiesService {
     }
 
     @Override
-    public void startLocalNotification(NewActivityDAO dao) {
+    public void startLocalNotification(ActivityDAO dao) {
 
         Context context = Ande.getContext();
 

@@ -1,4 +1,4 @@
-package br.com.ande.dao.firebase;
+package br.com.ande.dao;
 
 /**
  * © Copyright 2017 Ande.

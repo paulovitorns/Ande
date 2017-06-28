@@ -1,4 +1,4 @@
-package br.com.ande.dao.firebase;
+package br.com.ande.dao;
 
 /**
  * © Copyright 2017 Ande.
@@ -6,16 +6,16 @@ package br.com.ande.dao.firebase;
  * Empresa : Ande app.
  */
 
-public class NewLocationDAO {
+public class LocationDAO {
 
     String locationId;
     double  lat;
     double  lng;
     boolean isInitial;
 
-    public NewLocationDAO() {}
+    public LocationDAO() {}
 
-    public NewLocationDAO(String locationId, double lat, double lng, boolean isInitial) {
+    public LocationDAO(String locationId, double lat, double lng, boolean isInitial) {
         this.locationId = locationId;
         this.lat        = lat;
         this.lng        = lng;

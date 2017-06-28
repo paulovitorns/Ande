@@ -1,4 +1,4 @@
-package br.com.ande.dao.firebase;
+package br.com.ande.dao;
 
 /**
  * © Copyright 2017 Ande.
@@ -6,7 +6,7 @@ package br.com.ande.dao.firebase;
  * Empresa : Ande app.
  */
 
-public class NewActivityDAO {
+public class ActivityDAO {
 
     String  activityId;
     int     steps;
@@ -16,9 +16,9 @@ public class NewActivityDAO {
     double  distance;
     int     lostKal;
 
-    public NewActivityDAO() {}
+    public ActivityDAO() {}
 
-    public NewActivityDAO(String activityId, int steps, long startTime, long finishTime, String durationTime, double distance, int lostKal) {
+    public ActivityDAO(String activityId, int steps, long startTime, long finishTime, String durationTime, double distance, int lostKal) {
         this.activityId     = activityId;
         this.steps          = steps;
         this.startTime      = startTime;

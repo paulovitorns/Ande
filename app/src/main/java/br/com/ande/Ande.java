@@ -2,17 +2,22 @@ package br.com.ande;
 
 import android.content.Context;
 import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 
 import com.firebase.client.Firebase;
-import com.orm.SugarApp;
-import com.orm.SugarContext;
+import com.crashlytics.android.Crashlytics;
+
+import br.com.ande.business.service.SessionManagerService;
+import br.com.ande.business.service.impl.SessionManagerServiceImpl;
+import br.com.ande.model.Session;
+import io.fabric.sdk.android.Fabric;
 /**
  * © Copyright 2017 Ande.
  * Autor : Paulo Sales - dev@paulovns.com.br
  * Empresa : Ande app.
  */
 
-public class Ande extends SugarApp {
+public class Ande extends MultiDexApplication {
 
     private static Context context;
 
@@ -35,6 +40,8 @@ public class Ande extends SugarApp {
     public void onCreate() {
         super.onCreate();
 
+        Fabric.with(this, new Crashlytics());
+
         context             = getApplicationContext();
         usersUriData        = context.getString(R.string.user_uri_data);
         historiesUriData    = context.getString(R.string.histories_uri_data);
@@ -45,8 +52,8 @@ public class Ande extends SugarApp {
         activitiesData      = context.getString(R.string.activities_data);
         locationsData       = context.getString(R.string.locations_data);
 
-        SugarContext.init(context);
         Firebase.setAndroidContext(this);
+
     }
 
     public static Context getContext() {
@@ -55,6 +62,21 @@ public class Ande extends SugarApp {
 
     public static void setContext(Context context) {
         Ande.context = context;
+    }
+
+    public static void logUserIntoFabric(){
+
+        SessionManagerService sessionManagerService = new SessionManagerServiceImpl();
+        Session session = sessionManagerService.getCurrentSession();
+
+        if(session != null && session.getUser() != null){
+            if (Fabric.isInitialized()) {
+                Crashlytics.setUserIdentifier(session.getUser().getUid());
+                Crashlytics.setUserEmail(session.getUser().getEmail());
+                Crashlytics.setUserName(session.getUser().getName());
+            }
+        }
+
     }
 
 }
