@@ -71,6 +71,7 @@ public class StepCountServiceImpl extends Service implements
     private boolean registered                  = false;
     private int     steps                       = 0;
     private int     tSteps                      = 0;
+    private int     lastStepsBeforeInitTimer    = 0;
     private Timer   timer;
     private long    WAIT_DELAY_FOR_NEXT_STEP    = Ande.getContext().getResources().getInteger(R.integer.wait_delay_for_next_step);
     private boolean isWaitNextStepStart;
@@ -125,7 +126,7 @@ public class StepCountServiceImpl extends Service implements
 
         dbRefHistories  = FirebaseDatabase.getInstance().getReference(Ande.historiesData).child(session.getUser().getUid());
 
-        service     = new ActivitiesServiceImpl();
+        service         = new ActivitiesServiceImpl();
 
         this.verifyHasDayChanged();
 
@@ -208,18 +209,12 @@ public class StepCountServiceImpl extends Service implements
 
                 }
 
+                finalTimeStamp = DateUtils.getCurrentTimeInMillis();
+
                 steps++;
                 tSteps++;
 
                 if(!isWaitNextStepStart){
-                    resetCurrentTimer();
-                }else{
-                    if(this.timer != null) {
-                        this.timer.cancel();
-                        this.timer.purge();
-                        this.timer = null;
-                    }
-
                     resetCurrentTimer();
                 }
 
@@ -241,17 +236,27 @@ public class StepCountServiceImpl extends Service implements
         if(this.timer == null)
             this.timer = new Timer();
 
+        lastStepsBeforeInitTimer = steps;
         isWaitNextStepStart = true;
 
         this.timer.schedule(new TimerTask() {
             @Override
             public void run() {
 
-                isWaitNextStepStart = false;
-                finalTimeStamp      = DateUtils.getCurrentTimeInMillis();
-                pushNewHistory();
-                steps = 0;
-                Log.d(TAG, "VAMOS REINICIAR");
+                if(steps == lastStepsBeforeInitTimer) {
+                    isWaitNextStepStart = false;
+                    pushNewHistory();
+                    steps = 0;
+                    Log.d(TAG, "VAMOS REINICIAR");
+                }else{
+                    if(timer != null) {
+                        timer.cancel();
+                        timer.purge();
+                        timer = null;
+                    }
+                    resetCurrentTimer();
+                }
+
             }
 
         }, WAIT_DELAY_FOR_NEXT_STEP);
