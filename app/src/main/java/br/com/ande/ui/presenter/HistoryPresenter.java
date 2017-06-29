@@ -7,5 +7,8 @@ package br.com.ande.ui.presenter;
  */
 
 public interface HistoryPresenter extends BasePresenter {
+
+    void loadMetrics();
+    void finishedLoadHistories();
     void removerHistoriesListener();
 }
