@@ -23,3 +23,24 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Add this global rule
+-keepattributes Signature
+
+#firebase
+-keep class com.firebase.** { *; }
+-dontwarn com.fasterxml.**
+
+# ButterKnife
+-keep class butterknife.** { *; }
+-dontwarn butterknife.internal.**
+-keep class **$$ViewBinder { *; }
+-keepclasseswithmembernames class * {@butterknife.* <fields>;}
+-keepclasseswithmembernames class * {@butterknife.* <methods>;}
+
+#Retrofit
+-dontwarn retrofit.**
+-dontwarn okio.**
+-keep class retrofit.** {*;}
+-keepattributes Signature
+-keepattributes Exceptions
