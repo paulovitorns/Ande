@@ -1,5 +1,6 @@
 package br.com.ande.ui.view.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import br.com.ande.R;
 import br.com.ande.model.DashboardNavigation;
+import br.com.ande.service.impl.StepCountServiceImpl;
 import br.com.ande.ui.presenter.DashboardPresenter;
 import br.com.ande.ui.presenter.impl.DashboardPresenterImpl;
 import br.com.ande.ui.view.DashBoardView;
@@ -44,6 +46,9 @@ public class DashBoardActivity extends BaseActivity implements DashBoardView {
 
         ButterKnife.bind(this);
         presenter = new DashboardPresenterImpl(this);
+
+        startService(new Intent(this, StepCountServiceImpl.class));
+
     }
 
     @Override

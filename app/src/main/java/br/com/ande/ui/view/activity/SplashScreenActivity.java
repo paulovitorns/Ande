@@ -61,8 +61,6 @@ public class SplashScreenActivity extends BaseActivity implements LauchView {
 
         this.presenter = new LaunchPresenterImpl(this);
 
-        startService(new Intent(this, StepCountServiceImpl.class));
-
     }
 
     @Override

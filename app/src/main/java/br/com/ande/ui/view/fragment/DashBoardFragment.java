@@ -1,19 +1,23 @@
 package br.com.ande.ui.view.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.HashMap;
 
@@ -38,7 +42,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Empresa : Ande app.
  */
 
-public class DashBoardFragment extends Fragment implements AndeDashView {
+public class DashBoardFragment extends Fragment implements
+        AndeDashView,
+        SensorEventListener{
 
     @Bind(R.id.txUserName)      TextView    txUserName;
     @Bind(R.id.txWalkRegister)  TextView    txWalkRegister;
@@ -55,6 +61,9 @@ public class DashBoardFragment extends Fragment implements AndeDashView {
 
     private AndeDashPresenter   presenter;
     private User                user;
+    private int                 steps = -1;
+    private SensorManager       sensorManager;
+    private Sensor              mSteps;
 
     public DashBoardFragment(){
 
@@ -77,6 +86,13 @@ public class DashBoardFragment extends Fragment implements AndeDashView {
 
         ButterKnife.bind(this, view);
 
+        sensorManager = (SensorManager) getContext().getSystemService(Context.SENSOR_SERVICE);
+        if(sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null){
+            mSteps = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        }else{
+            Toast.makeText(getContext(), "Você não tem o sensor de passos", Toast.LENGTH_LONG).show();
+        }
+
         targetH = Utils.dp2px((int) (getResources().getDimension(R.dimen.img_dash_size) / getResources().getDisplayMetrics().density));
         targetW = Utils.dp2px((int) (getResources().getDimension(R.dimen.img_dash_size) / getResources().getDisplayMetrics().density));
 
@@ -84,6 +100,7 @@ public class DashBoardFragment extends Fragment implements AndeDashView {
 
         if(savedInstanceState != null){
             showInfoUser((User) savedInstanceState.getSerializable(User.KEY));
+            steps = savedInstanceState.getInt("steps");
         }else{
             this.user = new User();
             this.presenter.onCreate();
@@ -95,6 +112,7 @@ public class DashBoardFragment extends Fragment implements AndeDashView {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putSerializable(User.KEY, user);
+        outState.putSerializable("steps", steps);
         super.onSaveInstanceState(outState);
     }
 
@@ -114,11 +132,13 @@ public class DashBoardFragment extends Fragment implements AndeDashView {
     @Override
     public void onResume() {
         super.onResume();
+        sensorManager.registerListener(this, mSteps, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        sensorManager.unregisterListener(this);
     }
 
     @Override
@@ -190,6 +210,8 @@ public class DashBoardFragment extends Fragment implements AndeDashView {
     @Override
     public void loadLastHistory(int steps, int totalSteps) {
 
+        this.steps = totalSteps;
+
         if(totalSteps == 0){
             containerLast.setVisibility(View.GONE);
         }else{
@@ -224,7 +246,6 @@ public class DashBoardFragment extends Fragment implements AndeDashView {
         txActualSteps.setText(String.valueOf(totalSteps));
     }
 
-
     @OnClick(R.id.containerUserInfo)
     public void onClickProfile(){
         ((DashBoardActivity) getActivity()).onClickProfile();
@@ -235,4 +256,12 @@ public class DashBoardFragment extends Fragment implements AndeDashView {
         ((DashBoardActivity) getActivity()).onClickHistory();
     }
 
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        steps++;
+        txActualSteps.setText(String.valueOf(steps));
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {}
 }
