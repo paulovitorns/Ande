@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.HashMap;
+
 import br.com.ande.R;
 import br.com.ande.model.User;
 import br.com.ande.ui.presenter.AndeDashPresenter;
@@ -23,6 +25,7 @@ import br.com.ande.ui.view.AndeDashView;
 import br.com.ande.ui.view.DashBoardView;
 import br.com.ande.ui.view.activity.DashBoardActivity;
 import br.com.ande.util.ActivitiesUtils;
+import br.com.ande.util.AnalyticsUtils;
 import br.com.ande.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -64,6 +67,11 @@ public class DashBoardFragment extends Fragment implements AndeDashView {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        HashMap<String, String> track = new HashMap<>();
+        track.put(AnalyticsUtils.event_track, AnalyticsUtils.screen_dashboard);
+
+        AnalyticsUtils.logScreenViewEvent(track, getContext());
 
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
 

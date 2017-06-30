@@ -6,11 +6,13 @@ import android.support.multidex.MultiDexApplication;
 
 import com.firebase.client.Firebase;
 import com.crashlytics.android.Crashlytics;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import br.com.ande.business.service.SessionManagerService;
 import br.com.ande.business.service.impl.SessionManagerServiceImpl;
 import br.com.ande.model.Session;
 import io.fabric.sdk.android.Fabric;
+
 /**
  * © Copyright 2017 Ande.
  * Autor : Paulo Sales - dev@paulovns.com.br
@@ -77,6 +79,23 @@ public class Ande extends MultiDexApplication {
             }
         }
 
+    }
+
+    public static void logUserInAnalytics(Context context){
+
+        FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(context);
+
+        SessionManagerService sessionManagerService = new SessionManagerServiceImpl();
+        Session session = sessionManagerService.getCurrentSession();
+
+        if(session != null && session.getUser() != null) {
+            analytics.setUserProperty("nome", session.getUser().getName());
+            analytics.setUserProperty("email", session.getUser().getEmail());
+            analytics.setUserProperty("data_nascimento", session.getUser().getBirthdate());
+            analytics.setUserProperty("genero", "null");
+            analytics.setUserProperty("altura", "0");
+            analytics.setUserProperty("peso", "0");
+        }
     }
 
 }

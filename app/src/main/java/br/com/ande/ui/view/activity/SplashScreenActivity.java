@@ -22,6 +22,7 @@ import br.com.ande.ui.presenter.LaunchPresenter;
 import br.com.ande.ui.presenter.impl.LaunchPresenterImpl;
 import br.com.ande.ui.view.LauchView;
 import br.com.ande.ui.view.component.CustomDialog;
+import br.com.ande.util.AnalyticsUtils;
 import br.com.ande.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -45,7 +46,10 @@ public class SplashScreenActivity extends BaseActivity implements LauchView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
+        AnalyticsUtils.logAppOpenEvent(this);
+
         Ande.logUserIntoFabric();
+        Ande.logUserInAnalytics(this);
 
         setTheme(R.style.AppTheme);
         getWindow().getDecorView().setSystemUiVisibility(
