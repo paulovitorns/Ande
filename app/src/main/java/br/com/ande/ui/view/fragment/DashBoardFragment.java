@@ -210,7 +210,8 @@ public class DashBoardFragment extends Fragment implements
     @Override
     public void loadLastHistory(int steps, int totalSteps) {
 
-        this.steps = totalSteps;
+        if(this.steps < totalSteps)
+            this.steps = totalSteps;
 
         if(totalSteps == 0){
             containerLast.setVisibility(View.GONE);
