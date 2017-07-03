@@ -20,6 +20,7 @@ import android.widget.EditText;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 import br.com.ande.BuildConfig;
 import br.com.ande.R;
@@ -31,6 +32,7 @@ import br.com.ande.ui.view.ProfileView;
 import br.com.ande.ui.view.component.CustomDialog;
 import br.com.ande.ui.view.component.DateValidateWatcher;
 import br.com.ande.ui.view.component.SimpleValidateWatcher;
+import br.com.ande.util.AnalyticsUtils;
 import br.com.ande.util.EditTextValidadeUtils;
 import br.com.ande.util.Utils;
 import butterknife.Bind;
@@ -75,6 +77,10 @@ public class ProfileFragment extends Fragment implements ProfileView {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        HashMap<String, String> track = new HashMap<>();
+        track.put(AnalyticsUtils.event_track, AnalyticsUtils.screen_profile_dash);
+        AnalyticsUtils.logScreenViewEvent(track, getContext());
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
@@ -122,11 +128,13 @@ public class ProfileFragment extends Fragment implements ProfileView {
     @Override
     public void onClickBtnSave() {
 
+        String oldEmail = (user.getEmail() == null || user.getEmail().equalsIgnoreCase("")) ? edtEmail.getText().toString() : user.getEmail();
+
         user.setName(edtName.getText().toString());
         user.setBirthdate(edtBirth.getText().toString());
         user.setEmail(edtEmail.getText().toString());
 
-        presenter.sendToRegister(user);
+        presenter.sendToRegister(user, oldEmail);
     }
 
     @Override
@@ -155,6 +163,13 @@ public class ProfileFragment extends Fragment implements ProfileView {
         EditTextValidadeUtils.setErrorToView(edtEmail, getContext());
         edtLayoutEmail.setErrorEnabled(true);
         edtLayoutEmail.setError(getString(R.string.error_format_email));
+    }
+
+    @Override
+    public void setEmailRegisteredError() {
+        EditTextValidadeUtils.setErrorToView(edtEmail, getContext());
+        edtLayoutEmail.setErrorEnabled(true);
+        edtLayoutEmail.setError(getString(R.string.error_registered_email));
     }
 
     @Override

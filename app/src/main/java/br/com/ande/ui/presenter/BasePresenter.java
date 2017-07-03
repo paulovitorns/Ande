@@ -10,6 +10,8 @@ public interface BasePresenter {
 
     void init();
 
+    void onCreate();
+
     void tryAgain();
 
     void goBack();

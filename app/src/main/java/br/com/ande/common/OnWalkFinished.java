@@ -1,6 +1,6 @@
 package br.com.ande.common;
 
-import br.com.ande.dao.ActivityDAO;
+import br.com.ande.model.Walk;
 
 /**
  * © Copyright 2017 Ande.
@@ -8,6 +8,6 @@ import br.com.ande.dao.ActivityDAO;
  * Empresa : Ande app.
  */
 
-public interface StepCountListener {
-    void onInsertHistorySuccess(ActivityDAO dao);
+public interface OnWalkFinished {
+    void walkLoaded(Walk walk);
 }

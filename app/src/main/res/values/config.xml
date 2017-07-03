@@ -6,7 +6,15 @@
     <string name="local_notification_param_id">id</string>
     <string name="local_notification_param_title">title</string>
     <string name="local_notification_param_msg">msg</string>
-    <integer name="wait_delay_for_next_step">10000</integer>
+    <integer name="wait_delay_for_next_step">60000</integer>
     <integer name="min_walked_time_to_send_notification">10</integer>
     <integer name="default_animation_duration">500</integer>
+    <string name="user_uri_data">https://ande-e2571.firebaseio.com/users</string>
+    <string name="histories_uri_data">https://ande-e2571.firebaseio.com/histories</string>
+    <string name="activities_uri_data">https://ande-e2571.firebaseio.com/activities</string>
+    <string name="locations_uri_data">https://ande-e2571.firebaseio.com/locations</string>
+    <string name="user_data">users</string>
+    <string name="histories_data">histories</string>
+    <string name="activities_data">activities</string>
+    <string name="locations_data">locations</string>
 </resources>

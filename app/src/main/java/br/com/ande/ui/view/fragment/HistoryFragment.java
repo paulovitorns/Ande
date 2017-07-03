@@ -11,11 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import java.util.HashMap;
+
 import br.com.ande.R;
 import br.com.ande.ui.presenter.HistoryPresenter;
 import br.com.ande.ui.presenter.impl.HistoryPresenterImpl;
 import br.com.ande.ui.view.DashBoardView;
 import br.com.ande.ui.view.HistoryView;
+import br.com.ande.util.ActivitiesUtils;
+import br.com.ande.util.AnalyticsUtils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -44,6 +48,10 @@ public class HistoryFragment extends Fragment implements HistoryView {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        HashMap<String, String> track = new HashMap<>();
+        track.put(AnalyticsUtils.event_track, AnalyticsUtils.screen_histories);
+        AnalyticsUtils.logScreenViewEvent(track, getContext());
+
         View view = inflater.inflate(R.layout.fragment_history, container, false);
 
         ButterKnife.bind(this, view);
@@ -54,10 +62,17 @@ public class HistoryFragment extends Fragment implements HistoryView {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onStart() {
+        super.onStart();
+        presenter.onCreate();
     }
 
+    @Override
+    public void onDestroy() {
+        presenter.removerHistoriesListener();
+        ActivitiesUtils.removeWalkListner();
+        super.onDestroy();
+    }
 
     @Override
     public Activity getContext() {

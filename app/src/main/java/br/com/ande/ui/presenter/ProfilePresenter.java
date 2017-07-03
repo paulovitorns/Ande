@@ -10,7 +10,13 @@ import br.com.ande.model.User;
 
 public interface ProfilePresenter extends BasePresenter {
 
-    void sendToRegister(User user);
+    void createNewUserIntoFireBase();
+
+    void updateUserIntoFirebase();
+
+    void requestUserUid(String oldEmail);
+
+    void sendToRegister(User user, String oldEmail);
 
     void sendToUpdate(User user);
 

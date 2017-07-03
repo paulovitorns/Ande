@@ -1,7 +1,6 @@
 package br.com.ande.model;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * © Copyright 2017 Ande.
@@ -13,7 +12,8 @@ public class User implements Serializable {
 
     public static String KEY = User.class.getSimpleName();
 
-    private long    id;
+
+    private String  uid;
     private String  name;
     private String  birthdate;
     private String  email;
@@ -22,20 +22,20 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(long id, String name, String birthdate, String email, String imgNameResource) {
-        this.id                 = id;
+    public User(String uid, String name, String birthdate, String email, String imgNameResource) {
+        this.uid                = uid;
         this.name               = name;
         this.birthdate          = birthdate;
         this.email              = email;
         this.imgNameResource    = imgNameResource;
     }
 
-    public long getId() {
-        return id;
+    public String getUid() {
+        return uid;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getName() {

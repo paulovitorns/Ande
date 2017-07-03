@@ -15,7 +15,7 @@ import br.com.ande.ui.view.fragment.ProfileFragment;
 
 public class DashboardPresenterImpl implements DashboardPresenter {
 
-    private DashBoardView view;
+    private DashBoardView       view;
     private DashboardNavigation dashNav;
 
     public DashboardPresenterImpl(DashBoardView view) {
@@ -27,6 +27,11 @@ public class DashboardPresenterImpl implements DashboardPresenter {
     public void init() {
         view.setupBottomNavigationView();
         view.loadDefaultFragment();
+    }
+
+    @Override
+    public void onCreate() {
+
     }
 
     @Override

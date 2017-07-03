@@ -1,16 +1,16 @@
 package br.com.ande.model;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.List;
 
 import br.com.ande.Ande;
 import br.com.ande.R;
-import br.com.ande.dao.HistoryDao;
+import br.com.ande.common.OnLoadMetricsFinished;
+import br.com.ande.dao.HistoryDAO;
 import br.com.ande.util.DateUtils;
+import br.com.ande.util.HIstoryUtils;
 import br.com.ande.util.Utils;
 
 /**
@@ -19,12 +19,12 @@ import br.com.ande.util.Utils;
  * Empresa : Ande app.
  */
 
-public class History {
+public class History implements OnLoadMetricsFinished {
 
     /**
      * reference of HistoryDao
      */
-    private long id;
+    private String id;
 
     /**
      * show some text like "segunda-feira, 20 de abr 2017"
@@ -51,12 +51,12 @@ public class History {
      */
     private boolean isCurrentDay;
 
-    public History(HistoryDao dao) {
-        this.setDecriptionOfSteps(dao.getDate());
-        this.setDescriptionHistoryText(dao.getDate());
+    public History(HistoryDAO dao) {
+        this.setDecriptionOfSteps(DateUtils.toDate(dao.getDate()));
+        this.setDescriptionHistoryText(DateUtils.toDate(dao.getDate()));
         this.setDescritionOfDistance(dao);
         this.steps  = dao.getSteps();
-        this.id     = dao.getItemId();
+        this.id     = dao.getHistoryId();
     }
 
     private void setDecriptionOfSteps(Date date){
@@ -85,15 +85,11 @@ public class History {
 
     }
 
-    private void setDescritionOfDistance(HistoryDao dao){
-        HashMap<HistoryDao.METRIC, Object> metrics = HistoryDao.getHistoryMetrics(dao);
-
-        double distance = Utils.getDistanceInKM(Double.parseDouble(String.valueOf(metrics.get(HistoryDao.METRIC.DISTANCE))));
-
-        this.descriptionDistance = Utils.StringToCurrency(distance);
+    private void setDescritionOfDistance(HistoryDAO dao){
+        HIstoryUtils.getHistoryMetrics(dao, this);
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
@@ -117,17 +113,11 @@ public class History {
         return isCurrentDay;
     }
 
-    public static List<History> histories(){
+    @Override
+    public void loadedMetrics(HashMap<HIstoryUtils.METRIC, Object> metrics) {
 
-        List<History> histories = new ArrayList<>();
-        List<HistoryDao> daos   = HistoryDao.findWithQuery(HistoryDao.class, "select * from HISTORY_DAO order by date desc");
+        double distance = Utils.getDistanceInKM(Double.parseDouble(String.valueOf(metrics.get(HIstoryUtils.METRIC.DISTANCE))));
 
-        if(daos.size() > 0){
-            for(HistoryDao dao : daos){
-                histories.add(new History(dao));
-            }
-        }
-
-        return histories;
+        this.descriptionDistance = Utils.StringToCurrency(distance);
     }
 }

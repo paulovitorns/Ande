@@ -25,12 +25,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     private List<History> historyList;
     private Context context;
 
-
     public HistoryAdapter(List<History> historyList, Context context) {
-        this.historyList = historyList;
+        this.historyList    = historyList;
         this.context        = context;
     }
-
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

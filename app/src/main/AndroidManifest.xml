@@ -25,10 +25,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <meta-data android:name="DATABASE" android:value="ande_histories.db" />
-        <meta-data android:name="VERSION" android:value="2" />
-        <meta-data android:name="QUERY_LOG" android:value="false" />
-
         <service android:name="br.com.ande.service.impl.StepCountServiceImpl"/>
 
         <provider
@@ -73,6 +69,9 @@
         <activity
             android:name=".ui.view.activity.DashBoardActivity"
             android:screenOrientation="portrait"/>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="b1c1d37b6edec7ebc78165a2d2ac7ad7be35aa3d" />
     </application>
 
 </manifest>
