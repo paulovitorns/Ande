@@ -8,4 +8,5 @@ package br.com.ande.ui.presenter;
 
 public interface LaunchPresenter extends BasePresenter {
     boolean hasLocationPermission();
+    boolean hasUserRegistered();
 }

@@ -47,8 +47,6 @@ public class DashBoardActivity extends BaseActivity implements DashBoardView {
         ButterKnife.bind(this);
         presenter = new DashboardPresenterImpl(this);
 
-        startService(new Intent(this, StepCountServiceImpl.class));
-
     }
 
     @Override
