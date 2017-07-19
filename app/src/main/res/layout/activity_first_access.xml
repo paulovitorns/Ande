@@ -15,6 +15,7 @@
         android:orientation="vertical"
         android:layout_centerInParent="true"
         android:gravity="center"
+        android:focusable="false"
         android:padding="@dimen/margin_default">
 
         <com.airbnb.lottie.LottieAnimationView
@@ -33,6 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:focusable="false"
             android:alpha="0">
 
             <TextView
@@ -42,6 +44,7 @@
                 android:text="@string/intro_first_access_title"
                 android:textSize="@dimen/font_large"
                 android:textColor="@color/white"
+                android:focusable="true"
                 android:textStyle="bold"/>
 
             <TextView
@@ -50,6 +53,7 @@
                 android:layout_marginTop="@dimen/margin_default"
                 android:text="@string/intro_first_access_desc"
                 android:textAlignment="center"
+                android:focusable="false"
                 android:textSize="@dimen/font_big"
                 android:textColor="@color/white"/>
 
@@ -64,6 +68,7 @@
                 android:background="@drawable/buttom_bg_default"
                 android:text="@string/intro_first_access_action"
                 android:textAllCaps="false"
+                android:focusable="true"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_default"
                 android:textStyle="bold"/>
@@ -78,6 +83,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:alpha="0"
+        android:focusable="false"
         android:orientation="vertical">
 
         <LinearLayout
@@ -88,6 +94,7 @@
             android:layout_marginBottom="@dimen/margin_big"
             android:orientation="horizontal"
             android:clickable="true"
+            android:focusable="true"
             android:background="@drawable/buttom_bg_reverse">
 
             <ImageView
@@ -142,6 +149,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/buttom_bg_reverse"
             android:clickable="true"
+            android:focusable="true"
             android:padding="@dimen/margin_default"
             android:orientation="horizontal">
 

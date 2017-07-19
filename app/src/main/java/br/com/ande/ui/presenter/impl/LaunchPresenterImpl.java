@@ -4,6 +4,9 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 
+import br.com.ande.business.service.SessionManagerService;
+import br.com.ande.business.service.impl.SessionManagerServiceImpl;
+import br.com.ande.model.Session;
 import br.com.ande.ui.presenter.LaunchPresenter;
 import br.com.ande.ui.view.LauchView;
 
@@ -19,7 +22,6 @@ public class LaunchPresenterImpl implements LaunchPresenter {
 
     public LaunchPresenterImpl(LauchView view) {
         this.view = view;
-        this.init();
     }
 
     @Override
@@ -48,6 +50,18 @@ public class LaunchPresenterImpl implements LaunchPresenter {
             return false;
         else
             return true;
+    }
+
+    @Override
+    public boolean hasUserRegistered() {
+//        SessionManagerService sessionManagerService = new SessionManagerServiceImpl();
+//        Session session = sessionManagerService.getCurrentSession();
+//
+//        if(session != null && session.getUser() != null)
+//            return true;
+//        else
+//            return false;
+        return false;
     }
 
 }

@@ -48,9 +48,6 @@ public class SplashScreenActivity extends BaseActivity implements LauchView {
 
         AnalyticsUtils.logAppOpenEvent(this);
 
-        Ande.logUserIntoFabric();
-        Ande.logUserInAnalytics(this);
-
         setTheme(R.style.AppTheme);
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
@@ -99,6 +96,7 @@ public class SplashScreenActivity extends BaseActivity implements LauchView {
             viewAnimator.setInterpolator(new DecelerateInterpolator()).start();
         }
 
+        this.presenter.init();
     }
 
     @Override
@@ -132,18 +130,41 @@ public class SplashScreenActivity extends BaseActivity implements LauchView {
     @Override
     public void startDash() {
 
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        startActivity(new Intent(SplashScreenActivity.this, FirstAccessActivity.class));
-                        finish();
-                    }
-                });
-            }
-        }, WAIT_DELAY);
+        if(this.presenter.hasUserRegistered()){
+
+            Ande.logUserIntoFabric();
+            Ande.logUserInAnalytics(this);
+
+            startService(new Intent(this, StepCountServiceImpl.class));
+
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            startActivity(new Intent(SplashScreenActivity.this, DashBoardActivity.class));
+                            finish();
+                        }
+                    });
+                }
+            }, WAIT_DELAY);
+        }else{
+
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            startActivity(new Intent(SplashScreenActivity.this, FirstAccessActivity.class));
+                            finish();
+                        }
+                    });
+                }
+            }, WAIT_DELAY);
+        }
+
     }
 
 
