@@ -54,14 +54,13 @@ public class LaunchPresenterImpl implements LaunchPresenter {
 
     @Override
     public boolean hasUserRegistered() {
-//        SessionManagerService sessionManagerService = new SessionManagerServiceImpl();
-//        Session session = sessionManagerService.getCurrentSession();
-//
-//        if(session != null && session.getUser() != null)
-//            return true;
-//        else
-//            return false;
-        return false;
+        SessionManagerService sessionManagerService = new SessionManagerServiceImpl();
+        Session session = sessionManagerService.getCurrentSession();
+
+        if(session != null && session.getUser() != null)
+            return true;
+        else
+            return false;
     }
 
 }
