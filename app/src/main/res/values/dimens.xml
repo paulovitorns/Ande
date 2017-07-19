@@ -11,6 +11,7 @@
     <dimen name="edt_common_size">48dp</dimen>
     <dimen name="img_empty_state_icon">130dp</dimen>
     <dimen name="img_splash_icon">130dp</dimen>
+    <dimen name="img_user_icon">150dp</dimen>
 
     <!--Margins default-->
     <dimen name="margin_micro">4dp</dimen>

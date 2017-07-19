@@ -41,7 +41,6 @@
     <!--history-->
     <string name="history_title">Suas caminhadas</string>
 
-
     <!--EmptyState-->
     <string name="empty_state_history_title">Ainda sem andar?</string>
     <string name="empty_state_history_msg">Parece que você ainda não tem registros das suas caminhadas. Para começar, basta andar por ai ;)</string>
@@ -65,6 +64,15 @@
 
     <!--Permission's texts-->
     <string name="permission_location_title">Podemos usar sua localização?</string>
-    <string name="permission_location_explain">Pedimos essa permissão para que possamos localizar seus pontos de partida e chegada das suas caminhadas.</string>
+    <string name="permission_location_explain">Pedimos essa permissão para que possamos localizar seu ponto de partida e chegada das suas caminhadas.</string>
+
+    <!--First Access Page-->
+    <string name="intro_first_access_title">Olá!</string>
+    <string name="intro_first_access_desc">Calculamos sua evolução baseado em algumas informações pessoais. Por isso, precisamos conhecê-lo um pouco mais ;)</string>
+    <string name="intro_first_access_action">vamos lá?</string>
+    <string name="new_user_title">Seu primeiro acesso?</string>
+    <string name="new_user_desc">toque aqui para informar seus dados.</string>
+    <string name="recover_user_title">Já tem uma conta?</string>
+    <string name="recover_user_desc">toque aqui para recuperar a sua conta.</string>
 
 </resources>

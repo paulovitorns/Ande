@@ -32,10 +32,10 @@ public class SplashScreenActivity extends BaseActivity implements LauchView {
     @Bind(R.id.imgIcon)     ImageView       imgIcon;
     @Bind(R.id.container)   RelativeLayout  container;
 
-    private long            WAIT_DELAY = 3000;
-    public static final int STARTUP_DELAY = 300;
-    public static final int ANIM_ITEM_DURATION = 1000;
-    public static final int ITEM_DELAY = 300;
+    private long            WAIT_DELAY = 1000;
+    public static final int STARTUP_DELAY = 200;
+    public static final int ANIM_ITEM_DURATION = 500;
+    public static final int ITEM_DELAY = 200;
 
     private boolean         animationStarted = false;
 
@@ -138,7 +138,7 @@ public class SplashScreenActivity extends BaseActivity implements LauchView {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        startActivity(new Intent(SplashScreenActivity.this, DashBoardActivity.class));
+                        startActivity(new Intent(SplashScreenActivity.this, FirstAccessActivity.class));
                         finish();
                     }
                 });
