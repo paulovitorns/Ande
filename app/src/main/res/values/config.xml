@@ -9,6 +9,9 @@
     <integer name="wait_delay_for_next_step">60000</integer>
     <integer name="min_walked_time_to_send_notification">10</integer>
     <integer name="default_animation_duration">500</integer>
+    <integer name="long_animation_duration">1000</integer>
+    <integer name="default_animation_delay">300</integer>
+    <integer name="long_animation_delay">500</integer>
     <string name="user_uri_data">https://ande-e2571.firebaseio.com/users</string>
     <string name="histories_uri_data">https://ande-e2571.firebaseio.com/histories</string>
     <string name="activities_uri_data">https://ande-e2571.firebaseio.com/activities</string>
