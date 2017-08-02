@@ -1,10 +1,8 @@
 package br.com.ande.ui.view.component;
 
-import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
